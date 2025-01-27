@@ -18,12 +18,12 @@ typedef struct	s_data
 	int		endian;
 }				t_data;
 
-#define MAP_X  8
-#define MAP_Y 8
+#define MAP_X  15
+#define MAP_Y 15
 #define TILE_SIZE 64
 #define PI 3.141592653589793
-float px = 300;
-float py = 300;
+float px = 250;
+float py = 250;
 float pangle = 0.0;
 float pdx = 0;
 float pdy = 0;
@@ -38,18 +38,23 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-
 int map[MAP_X][MAP_Y] = {
-    {1,1,1,1,1,1,1,1},
-    {1,0,1,0,0,0,0,1},
-    {1,0,1,0,0,0,0,1},
-    {1,0,1,0,0,0,0,1},
-    {1,0,0,0,0,0,0,1},
-    {1,0,0,0,0,1,0,1},
-    {1,0,0,0,0,0,0,1},
-    {1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,0,0,0,0,1,0,0,0,0,0,1,0,0,1},
+    {1,0,1,1,0,1,0,1,1,1,0,1,0,1,1},
+    {1,0,1,0,0,0,0,0,0,1,0,0,0,0,1},
+    {1,0,1,0,1,1,1,1,0,1,1,1,1,0,1},
+    {1,0,1,0,1,0,0,0,0,0,0,0,1,0,1},
+    {1,0,0,0,1,0,1,1,1,1,1,0,0,0,1},
+    {1,0,1,0,1,0,1,0,0,0,1,0,1,0,1},
+    {1,0,1,0,1,0,1,0,1,0,1,0,1,0,1},
+    {1,0,1,0,0,0,1,0,1,0,1,0,1,0,1},
+    {1,0,1,1,1,0,0,0,1,0,0,0,1,0,1},
+    {1,0,0,0,1,1,1,1,1,1,1,1,1,0,1},
+    {1,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,1,0,1,1,1,0,1,1,1,1,1,0,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
-
 
 int clear_window (t_data *data)
 {
@@ -139,14 +144,29 @@ int player (t_data *data, int x , int y, float pangle, int color)
     draw_line(data , x, y , pangle, color);
 }
 
-int collision (float x, float y)
+int collision(float x, float y)
 {
-    int map_x = (int)((x + player_size) / TILE_SIZE);
-    int map_y = (int)((y + player_size) / TILE_SIZE);
-    if (map_x < 0 || map_y < 0 || map_x >= MAP_X || map_y >= MAP_Y)
+    int top_left_x = (int)(x / TILE_SIZE);
+    int top_left_y = (int)(y / TILE_SIZE);
+    
+    int top_right_x = (int)((x + player_size) / TILE_SIZE);
+    int top_right_y = (int)(y / TILE_SIZE);
+    
+    int bottom_left_x = (int)(x / TILE_SIZE);
+    int bottom_left_y = (int)((y + player_size) / TILE_SIZE);
+    
+    int bottom_right_x = (int)((x + player_size) / TILE_SIZE);
+    int bottom_right_y = (int)((y + player_size) / TILE_SIZE);
+    
+    if (top_left_x < 0 || top_left_y < 0 || bottom_right_x >= MAP_X || bottom_right_y >= MAP_Y)
         return 1;
-    if (map[map_y][map_x] == 1)
+        
+    if (map[top_left_y][top_left_x] == 1 ||
+        map[top_right_y][top_right_x] == 1 ||
+        map[bottom_left_y][bottom_left_x] == 1 ||
+        map[bottom_right_y][bottom_right_x] == 1)
         return 1;
+    
     return 0;
 }
 
@@ -185,7 +205,7 @@ int move (int keycode, void *data)
         next_px += pdx;
         next_py += pdy;
     }
-    else if (keycode = 115)
+    else if (keycode == 115)
     {
         next_px -= pdx;
         next_py -= pdy;
@@ -206,13 +226,10 @@ int main (int ac, char **av)
 {
     t_data *data = malloc(sizeof(t_data));
     data->mlx = mlx_init();
-    data->win = mlx_new_window(data->mlx, TILE_SIZE * 8, TILE_SIZE * 8, "cube");
-    data->img = mlx_new_image(data->mlx, TILE_SIZE * 8, TILE_SIZE * 8);
+    data->win = mlx_new_window(data->mlx, TILE_SIZE * MAP_X, TILE_SIZE * MAP_Y, "cube");
+    data->img = mlx_new_image(data->mlx, TILE_SIZE * MAP_X, TILE_SIZE * MAP_Y);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
     void *params[] = {data->mlx, data->win};
-   
-    
-
     draw_map(data, px, py);
     player(data, px, py, pangle, 0x00FF0000);
     mlx_put_image_to_window(data->mlx,data->win, data->img, 0, 0);
