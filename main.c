@@ -24,33 +24,23 @@ char	*ft_strchr(char *s, int c)
 	}
 	return (NULL);
 }
-char	*ft_strnstr(char *haystack, char *needle, size_t n)
+char	*ft_strncmp(char *dest, char *src, int n)
 {
-	size_t	i;
-	size_t	j;
+	int	i;
+	int	j;
 
 	i = 0;
 	j = 0;
-	if (!haystack || n == 0)
-		return (NULL);
-	if (!(needle[j]))
-		return ((char *)&haystack[i]);
-	while (haystack && haystack[i])
+	while (dest && src && dest[i] && src[i] && dest[i] == src )
 	{
-		j = 0;
-		while (haystack[i + j] == needle[j] && i + j < n)
-		{
-			if (needle[j + 1] == '\0')
-				return ((char *)&haystack[i]);
-			j++;
-		}
-		i++;
+		/* code */
 	}
+	
 	return (NULL);
 }
 void extension_validation(char *str)
 {
-	if(ft_strlen(ft_strchr(str , '.')) != 4)
+	if(ft_strlen(ft_strchr(str , '.')) != 4 && !ft_strncmp(ft_strchr(str , '.') , ".cub", 4))
 	{
 		printf("data == %s || %s\n", str ,ft_strchr(str , '.'));
 		return (printf("Invalid map extension\n") ,exit(1), (void)0);
