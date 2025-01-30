@@ -2,15 +2,15 @@ NAME = Cub3D
 
 CC = cc
 
-CFLAGS = -Wextra -Wall -Werror  -I./include/
-SRC = main.c
+CFLAGS = -Wextra -Wall -Werror  -I./include/ 
+SRC = main.c parsing/file_validation.c
 
 OBJ = $(SRC:.c=.o)
 
 all : $(NAME)
 
 $(NAME) : $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) -Lminilibx-linux -lXext -lX11  -lmlx_Linux -lz -lm -o $(NAME)
 clean :
 	rm -rf $(OBJ)
 fclean : clean

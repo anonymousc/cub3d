@@ -1,28 +1,9 @@
-<<<<<<< HEAD
-#include <stdlib.h>
-#include <stdio.h>
-#include "minilibx-linux/mlx.h"
-#include <math.h>
+#include "Cub3D.h"
 // w = 119;
 // s = 115;
 // a = 97;
 // d = 100;
 
-typedef struct	s_data 
-{
-    void    *mlx;
-    void    *win;
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-}				t_data;
-
-#define MAP_X  15
-#define MAP_Y 15
-#define TILE_SIZE 64
-#define PI 3.141592653589793
 float px = 250;
 float py = 250;
 float pangle = 0.0;
@@ -57,7 +38,7 @@ int map[MAP_X][MAP_Y] = {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
-int clear_window (t_data *data)
+void clear_window (t_data *data)
 {
     mlx_clear_window(data->mlx, data->win);
 }
@@ -96,7 +77,8 @@ int draw_map(t_data *data, int px, int py)
     int i = 0;
     int j = 0;
     int color;
-
+	(void)px;
+	(void)py;
     while (i < MAP_Y) 
     {
         j = 0;
@@ -129,7 +111,7 @@ int draw_line(t_data *data, int x, int y, float angle, int color)
     return 0;
 }
 
-int player (t_data *data, int x , int y, float pangle, int color)
+void player (t_data *data, int x , int y, float pangle, int color)
 {
     int i = 0;
     while (i < player_size)
@@ -225,93 +207,18 @@ int move (int keycode, void *data)
 
 int main (int ac, char **av)
 {
+	(void)ac;
+	(void)av;
+	file_validation(ac, av);
     t_data *data = malloc(sizeof(t_data));
     data->mlx = mlx_init();
     data->win = mlx_new_window(data->mlx, TILE_SIZE * MAP_X, TILE_SIZE * MAP_Y, "cube");
     data->img = mlx_new_image(data->mlx, TILE_SIZE * MAP_X, TILE_SIZE * MAP_Y);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
-    void *params[] = {data->mlx, data->win};
     draw_map(data, px, py);
     player(data, px, py, pangle, 0x00FF0000);
     mlx_put_image_to_window(data->mlx,data->win, data->img, 0, 0);
     mlx_hook(data->win, 02, (1L << 0), move, data);
     mlx_loop(data->mlx);
-=======
-#include "Cub3D.h"
-
-int ft_strlen(char *str)
-{
-	int i = 0;
-	while (str[i])
-	{
-		i++;
-	}
-	return (i);
-}
-char	*ft_strchr(char *s, int c)
-{
-	size_t	i;
-	size_t	len;
-
-	i = 0;
-	len = ft_strlen(s);
-	while (i <= len)
-	{
-		if (s[i] == (char)c)
-			return ((char *)s + i);
-		i++;
-	}
-	return (NULL);
-}
-char	*ft_strnstr(char *haystack, char *needle, size_t n)
-{
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	j = 0;
-	if (!haystack || n == 0)
-		return (NULL);
-	if (!(needle[j]))
-		return ((char *)&haystack[i]);
-	while (haystack && haystack[i])
-	{
-		j = 0;
-		while (haystack[i + j] == needle[j] && i + j < n)
-		{
-			if (needle[j + 1] == '\0')
-				return ((char *)&haystack[i]);
-			j++;
-		}
-		i++;
-	}
-	return (NULL);
-}
-void extension_validation(char *str)
-{
-	if(ft_strlen(ft_strchr(str , '.')) != 4)
-	{
-		printf("data == %s || %s\n", str ,ft_strchr(str , '.'));
-		return (printf("Invalid map extension\n") ,exit(1), (void)0);
-	}
-}
-
-void file_validation(int arg,char **str)
-{
-	if(arg != 2)
-	{
-		printf("usage %s path_to or filename.cub", str[0]);
-		exit (1);
-	}
-	extension_validation(str[1]);
-	int fd = open(str[1] , O_RDWR);
-	if(fd == -1)
-		return (close(fd) ,printf("Invalid file\n") ,exit(1), (void)0);
-	close(fd);
-}
-
-int main(int ac , char **av)
-{
-	file_validation(ac, av);
->>>>>>> cdf4b04 (PUSH : adding file parsing and still testing parsing)
+	return 0;
 }
