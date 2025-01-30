@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/aait-bou/wolf3d",
-      "program": "/home/aait-bou/wolf3d/build/Debug/outDebug",
+      "cwd": "/home/aessadik/cub3d",
+      "program": "/home/aessadik/cub3d/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
