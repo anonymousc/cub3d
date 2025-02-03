@@ -6,6 +6,8 @@
 #include "minilibx-linux/mlx.h"
 #include <math.h>
 #include <stdbool.h>
+#include <limits.h>
+
 #define UP 119
 #define DOWN 115
 #define LEFT 97
@@ -14,12 +16,11 @@
 #define MAP_Y 10
 #define TILE_SIZE 64
 #define PI 3.141592653589793
-#define MAPS 64
 #define WINDOW_WIDTH TILE_SIZE * MAP_X
 #define WINDOW_HEIGHT TILE_SIZE * MAP_Y
 #define FOV  60 * (PI / 180)
-#define STRIP_WIDTH 10
-#define N_R 64
+#define STRIP_WIDTH 1
+#define MINIMAP_SCALE_FACTOR 0.2
 
 typedef struct s_player 
 {
@@ -46,6 +47,13 @@ typedef struct s_rays
     float vertwallhitY;
     bool foundhorwallhit;
     bool foundvertwallhit;
+    bool washitvertical;
+    float HorzDistance;
+    float VertDistance;
+    float WallHitX;
+    float WallHitY;
+    float distance;
+    float WallStripHeight;
 }t_rays;
 
 typedef struct	s_data 
@@ -65,6 +73,7 @@ typedef struct	s_data
 float normalize_angle(float angle);
 int horz_interception (t_data *data, int i);
 int vert_interception (t_data *data, int i);
+void hor_ver_distances (t_data *data, int i);
 int collision(float x, float y);
 
 #endif
