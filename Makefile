@@ -2,8 +2,9 @@ NAME = Cub3D
 
 CC = cc
 
-CFLAGS = -Wextra -Wall -Werror  -I./include/ 
-SRC = main.c parsing/file_validation.c
+
+CFLAGS = -Wextra -Wall -Werror  -I./include/
+SRC = main.c
 
 OBJ = $(SRC:.c=.o)
 
