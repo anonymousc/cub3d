@@ -287,3 +287,4 @@ int main (int ac, char **av)
     mlx_loop(data->mlx);
 	return 0;
 }
+
