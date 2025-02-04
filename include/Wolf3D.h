@@ -1,12 +1,14 @@
-#ifndef WOLF_H
-#define WOLF_H
+#ifndef CUB3D_H
+#define CUB3D_H
 
-#include <stdlib.h>
-#include <stdio.h>
-#include "minilibx-linux/mlx.h"
 #include <math.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <limits.h>
+#include "../minilibx-linux/mlx.h"
 
 #define UP 119
 #define DOWN 115
@@ -75,5 +77,18 @@ int horz_interception (t_data *data, int i);
 int vert_interception (t_data *data, int i);
 void hor_ver_distances (t_data *data, int i);
 int collision(float x, float y);
+
+
+
+
+//// PARSING /////
+typedef struct s_parsing
+{
+    char **coloring;
+    char **direction;
+    char **map;
+}               t_parsing;
+
+void    file_validation(int arg,char **str);
 
 #endif

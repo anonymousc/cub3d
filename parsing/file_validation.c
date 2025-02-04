@@ -1,4 +1,4 @@
-#include "Cub3D.h"
+#include "Wolf3D.h"
 
 int ft_strlen(char *str)
 {

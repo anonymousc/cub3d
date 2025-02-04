@@ -1,4 +1,4 @@
-#include "wolf.h"
+#include "Wolf3D.h"
 
 int num_of_rays = WINDOW_WIDTH / STRIP_WIDTH;
 float distProjPlane;
@@ -11,8 +11,8 @@ int map[MAP_X][MAP_Y] = {
     {1,1,1,0,0,0,0,1,0,1},
     {1,0,0,0,0,0,0,1,0,1},
     {1,0,1,1,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,1},
-    {1,0,1,0,0,0,0,0,0,1},
+    {1,0,1,0,1,1,1,1,0,1},
+    {1,0,1,1,1,0,0,0,0,1},
     {1,1,1,1,1,1,1,1,1,1}
 };
 
@@ -23,15 +23,14 @@ void calculateDistance()
 
 void my_mlx_pixel_put(t_data *data, float x, float y, int color)
 {
-    if (x < 0 || y < 0 || x >= TILE_SIZE * MAP_X || y >= TILE_SIZE * MAP_Y)
-        return;
 	char *dst;
+
 	dst = data->addr + ((int)y * data->line_length + (int)x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
 }
 
 
-int clear_window (t_data *data)
+void clear_window (t_data *data)
 {
     mlx_clear_window(data->mlx, data->win);
 }
@@ -111,13 +110,12 @@ void cast_all_rays(t_data *data)
     int column_id = 0;
 
     init_rays(data, &data->rays[0], ray_angle);
-    while (i < 1)
+    while (i < num_of_rays)
     {
-        horz_interception(data, 600);
-        vert_interception(data, 600);
-        hor_ver_distances(data, 600);
-        printf ("distance %f\n", data->rays[600].distance);
-        cast_ray(data, 600);
+        horz_interception(data, i);
+        vert_interception(data, i);
+        hor_ver_distances(data, i);
+        cast_ray(data, i);
         i++;
         column_id++;
     }
@@ -176,7 +174,7 @@ int draw_map(t_data *data)
     return 0;
 }
 
-int draw_player (t_data *data, t_player *player, int color)
+void draw_player (t_data *data, t_player *player, int color)
 {
     int i = 0;
     cast_all_rays(data);
@@ -270,6 +268,7 @@ void init_player (t_player *player)
 
 int main (int ac, char **av)
 {
+    (void)ac , (void)av;
     t_data *data = malloc(sizeof(t_data));
     t_player *player = malloc(sizeof (t_player));
     t_rays *rays = malloc (sizeof(t_rays) * (WINDOW_WIDTH / STRIP_WIDTH));
@@ -278,7 +277,7 @@ int main (int ac, char **av)
     data->win = mlx_new_window(data->mlx, TILE_SIZE * MAP_X, TILE_SIZE * MAP_Y, "cube");
     data->img = mlx_new_image(data->mlx, TILE_SIZE * MAP_X, TILE_SIZE * MAP_Y);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
-    void *params[] = {data->mlx, data->win};
+    // void *params[] = {data->mlx, data->win};
     init_player (player);
     data->player = player;
     data->rays = rays;

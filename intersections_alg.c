@@ -1,4 +1,4 @@
-#include "wolf.h"
+#include "Wolf3D.h"
 
 float normalize_angle(float angle)
 {
