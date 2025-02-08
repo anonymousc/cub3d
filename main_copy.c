@@ -1,7 +1,9 @@
 #include "Wolf3D.h"
 
 int num_of_rays = WINDOW_WIDTH / STRIP_WIDTH;
-float distProjPlane;
+double distProjPlane;
+
+void render3DWalls(t_data *data, int i);
 
 int map[MAP_X][MAP_Y] = {
     {1,1,1,1,1,1,1,1,1,1},
@@ -10,25 +12,35 @@ int map[MAP_X][MAP_Y] = {
     {1,0,1,0,0,0,0,0,0,1},
     {1,1,1,0,0,0,0,1,0,1},
     {1,0,0,0,0,0,0,1,0,1},
-    {1,0,1,1,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,1},
     {1,0,1,0,1,1,1,1,0,1},
     {1,0,1,1,1,0,0,0,0,1},
     {1,1,1,1,1,1,1,1,1,1}
 };
 
-void calculateDistance() 
-{
-    distProjPlane = (WINDOW_WIDTH / 2.0f) / tan(FOV / 2.0f);
-}
 
-void my_mlx_pixel_put(t_data *data, float x, float y, int color)
+void my_mlx_pixel_put(t_data *data, double x, double y, int color)
 {
 	char *dst;
 
 	dst = data->addr + ((int)y * data->line_length + (int)x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
 }
-
+void fill_bg(t_data *data)
+{
+    int y = 0;
+    int x;
+    while (y < WINDOW_HEIGHT)
+    {   
+        x = 0;
+        while (x < WINDOW_WIDTH)
+        {
+            my_mlx_pixel_put(data, x, y, 0x808080);
+            x++;
+        }
+        y++;
+    }
+}
 
 void clear_window (t_data *data)
 {
@@ -37,28 +49,29 @@ void clear_window (t_data *data)
 
 int draw_line(t_data *data, t_player *player, int color)
 {
-    int line_length = 60;
+    int line_length = 60 * MINIMAP_SCALE;
+    double scaled_x = player->px * MINIMAP_SCALE;
+    double scaled_y = player->py * MINIMAP_SCALE;
 
     int i = 0;
-    while (i < line_length )
+    while (i < line_length)
     {
-        int current_x = player->px  + (int)(cos(player->pangle) * i);
-        int current_y = player->py  + (int)(sin(player->pangle) * i);
+        int current_x = scaled_x + (cos(player->pangle) * i);
+        int current_y = scaled_y + (sin(player->pangle) * i);
         my_mlx_pixel_put(data, current_x, current_y, color);
         i++;
     }
     return 0;
 }
 
-
-void init_rays (t_data *data, t_rays *first_ray, float ray_angle)
+void init_rays (t_data *data, t_rays *first_ray, double ray_angle)
 {
     first_ray->ray_angle = normalize_angle(ray_angle);
-    float angle_increment = FOV / num_of_rays;
+    double angle_increment = FOV / num_of_rays;
     int i = 1;
     while (i < num_of_rays)
     {
-        data->rays[i].ray_angle = data->rays[i - 1].ray_angle + angle_increment;
+        data->rays[i].ray_angle = normalize_angle(data->rays[i - 1].ray_angle + angle_increment);
         i++;
     }
     i = 0;
@@ -80,32 +93,31 @@ void init_rays (t_data *data, t_rays *first_ray, float ray_angle)
         data->rays[i].HorzDistance = 0;
         data->rays[i].VertDistance = 0;
         data->rays[i].distance = 0;
-        data->rays[i].WallStripHeight = (TILE_SIZE / data->rays[i].distance) * distProjPlane;
         i++;
     }
 }
+
 
 void cast_ray(t_data *data, int strip_i)
 {
-    float i = 0.0;
-    float ray_x;
-    float ray_y;
+    double i = 0.0;
+    double ray_x;
+    double ray_y;
     int color = 0xFF0000;
 
-    while (i < data->rays[strip_i].distance )
+    while (i < data->rays[strip_i].distance)
     {
-        ray_x = (data->player->px + cos(data->rays[strip_i].ray_angle) * i) ;
-        ray_y = (data->player->py + sin(data->rays[strip_i].ray_angle) * i) ;
-
+        ray_x = (data->player->px + cos(data->rays[strip_i].ray_angle) * i) * MINIMAP_SCALE;
+        ray_y = (data->player->py + sin(data->rays[strip_i].ray_angle) * i) * MINIMAP_SCALE;
         my_mlx_pixel_put(data, ray_x, ray_y, color);
-
         i++;
     }
 }
 
-void cast_all_rays(t_data *data)
+void *cast_all_rays(void *arg)
 {
-    float ray_angle = data->player->pangle - (FOV / 2);
+    t_data *data = (t_data *)arg;
+    double ray_angle = data->player->pangle - (FOV / 2);
     int i = 0;
     int column_id = 0;
 
@@ -115,36 +127,69 @@ void cast_all_rays(t_data *data)
         horz_interception(data, i);
         vert_interception(data, i);
         hor_ver_distances(data, i);
-        cast_ray(data, i);
+        render3DWalls(data , i);
         i++;
         column_id++;
     }
+    return NULL;
+}
+int draw_rays(t_data *data)
+{
+    int i = 0;
+    while (i < num_of_rays)
+    {
+        cast_ray(data, i);
+        i++;
+    }
+}
+
+void draw_rect(t_data *data, double startx, double starty, double endx, double endy)
+{
+    double x = startx;
+    while (x < endx)
+    {
+        double y = starty;
+        while (y < endy)
+        {
+            my_mlx_pixel_put(data, x, y, 0xFFFFFF);
+            y++;
+        }
+        x++;
+    }
+}
+
+void render3DWalls(t_data *data, int i)
+{
+    double distProjPlane = (WINDOW_WIDTH / 2) / tan(FOV / 2);
+    double wallStripHeight = (TILE_SIZE / data->rays[i].distance) * distProjPlane;
+
+    double starty = (WINDOW_HEIGHT / 2) - (wallStripHeight / 2);
+    double endy = (WINDOW_HEIGHT / 2) + (wallStripHeight / 2);
+
+    if (starty < 0) 
+        starty = 0;
+    if (endy > WINDOW_HEIGHT) 
+        endy = WINDOW_HEIGHT;
+
+    draw_rect(data, i * STRIP_WIDTH, starty, (i + 1) * STRIP_WIDTH, endy);
+
 }
 
 int draw_tile(t_data *data, int x, int y, int color)
 {
     int i = 0;
     int j = 0;
-    int startX = x * TILE_SIZE ; 
-    int startY = y * TILE_SIZE ;
+    int startX = x * MINIMAP_TILE_SIZE;
+    int startY = y * MINIMAP_TILE_SIZE;
 
-    while (i < TILE_SIZE ) 
+    while (i < MINIMAP_TILE_SIZE)
     {
         j = 0;
-        while (j < TILE_SIZE ) 
+        while (j < MINIMAP_TILE_SIZE)
         {
             my_mlx_pixel_put(data, startX + i, startY + j, color);
             j++;
         }
-        i++;
-    }
-    i = 0;
-    while (i < TILE_SIZE )
-    {
-        my_mlx_pixel_put(data, startX + i, startY , 0xFFFFFF);
-        my_mlx_pixel_put(data, startX + i, startY + (TILE_SIZE - 1) , 0xFFFFFF);
-        my_mlx_pixel_put(data, startX, startY + i, 0xFFFFFF);
-        my_mlx_pixel_put(data, startX + (TILE_SIZE - 1) , startY + i, 0xFFFFFF);
         i++;
     }
     return 0;
@@ -174,16 +219,22 @@ int draw_map(t_data *data)
     return 0;
 }
 
-void draw_player (t_data *data, t_player *player, int color)
+void draw_player(t_data *data, t_player *player, int color)
 {
+    double scaled_size = player->player_size * MINIMAP_SCALE;
+    double scaled_x = player->px * MINIMAP_SCALE;
+    double scaled_y = player->py * MINIMAP_SCALE;
+    
     int i = 0;
-    cast_all_rays(data);
-    while (i < player->player_size )
+    while (i < scaled_size)
     {
         int j = 0;
-        while (j < player->player_size )
+        while (j < scaled_size)
         {
-            my_mlx_pixel_put(data, ((player->px - player->player_size / 2) + i)  , ((player->py - player->player_size / 2) + j) , color);
+            my_mlx_pixel_put(data, 
+                ((scaled_x - scaled_size / 2) + i),
+                ((scaled_y - scaled_size / 2) + j),
+                color);
             j++;
         }
         i++;
@@ -191,21 +242,21 @@ void draw_player (t_data *data, t_player *player, int color)
     draw_line(data, player, color);
 }
 
-int collision(float x, float y)
+bool collision(double x, double y)
 {
     int mapx = (int)(x / TILE_SIZE);
     int mapy = (int)(y / TILE_SIZE);
     
     if (x < 0 || y < 0 || x >= (MAP_X * TILE_SIZE) || y >= (MAP_Y * TILE_SIZE))
-        return 1;
+        return true;
         
     return (map[mapy][mapx] == 1);
 }
 
 int update(t_data *data)
 {
-    float next_px = data->player->px;
-    float next_py = data->player->py;
+    double next_px = data->player->px;
+    double next_py = data->player->py;
 
     data->player->pangle += data->player->turn_direction * data->player->rotation_speed;
 
@@ -219,8 +270,11 @@ int update(t_data *data)
         data->player->py = next_py;
 
     clear_window(data);
+    fill_bg(data);
+    cast_all_rays(data);
     draw_map(data);
     draw_player(data, data->player, 0x0000FF);
+    draw_rays(data);
 
     data->player->walk_direction = 0;
     data->player->turn_direction = 0;
@@ -233,22 +287,24 @@ int update(t_data *data)
 int keypress (int keycode, void *data)
 {
     t_data *img = (t_data *)data; 
+
     
-    if (keycode != 97 && keycode != 100 && keycode != 119 && keycode != 115 && keycode != 65307)
-        return 0;
     if (keycode == 65307)
     {
         mlx_destroy_window(img->mlx, img->win);
+        free(img->player);
+        free(img->rays);
+        free(img);
         exit (0);
     }
-    else if (keycode == RIGHT)
-        img->player->turn_direction = 1;
-    else if (keycode == LEFT)
-        img->player->turn_direction = -1;
     else if(keycode == UP)
         img->player->walk_direction = 1;
     else if (keycode == DOWN)
         img->player->walk_direction = -1;
+    else if (keycode == TURN_RIGHT || keycode == RIGHT) 
+        img->player->turn_direction = 1;
+    else if (keycode == TURN_LEFT || keycode == LEFT)
+        img->player->turn_direction = -1;
 
     update(img);
     return 0;
@@ -266,6 +322,30 @@ void init_player (t_player *player)
     player->rotation_speed = 4 * (PI / 180);
 }
 
+int	c(void)
+{
+	exit(0);
+}
+
+void init_threads(t_data *data)
+{
+    int i = 0;
+    while (i < num_of_rays)
+    {
+        data->threads[i].id = i;
+        data->threads[i].ray_id = i;
+        pthread_create(&data->threads[i].id, NULL, cast_all_rays, data);
+        i++;
+    }
+    i = 0;
+    while (i < num_of_rays)
+    {
+        pthread_join(data->threads[i].id, NULL);
+        i++;
+    }
+
+}
+
 int main (int ac, char **av)
 {
     (void)ac , (void)av;
@@ -277,13 +357,17 @@ int main (int ac, char **av)
     data->win = mlx_new_window(data->mlx, TILE_SIZE * MAP_X, TILE_SIZE * MAP_Y, "cube");
     data->img = mlx_new_image(data->mlx, TILE_SIZE * MAP_X, TILE_SIZE * MAP_Y);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
-    // void *params[] = {data->mlx, data->win};
     init_player (player);
+    init_threads(data);
     data->player = player;
     data->rays = rays;
+    fill_bg(data);
+    cast_all_rays(data);
     draw_map(data);
     draw_player(data, player, 0x0000FF);
+    draw_rays(data);
     mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
     mlx_hook(data->win, 02, (1L << 0), keypress, data);
+    mlx_hook(data->win, 17, 0, c, data);
     mlx_loop(data->mlx);
 }

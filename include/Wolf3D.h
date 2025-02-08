@@ -1,5 +1,5 @@
-#ifndef CUB3D_H
-#define CUB3D_H
+#ifndef Wolf3D_H
+#define Wolf3D_H
 
 #include <math.h>
 #include <stdio.h>
@@ -8,12 +8,16 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <limits.h>
+#include <pthread.h>
+#include <stdatomic.h>
 #include "../minilibx-linux/mlx.h"
 
 #define UP 119
 #define DOWN 115
 #define LEFT 97
 #define RIGHT 100
+#define TURN_RIGHT 65363
+#define TURN_LEFT 65361
 #define MAP_X  10
 #define MAP_Y 10
 #define TILE_SIZE 64
@@ -22,40 +26,50 @@
 #define WINDOW_HEIGHT TILE_SIZE * MAP_Y
 #define FOV  60 * (PI / 180)
 #define STRIP_WIDTH 1
-#define MINIMAP_SCALE_FACTOR 0.2
+#define MINIMAP_SCALE 0.3
+#define MINIMAP_TILE_SIZE (TILE_SIZE * MINIMAP_SCALE)
+
+typedef struct s_rays t_rays;
+
+typedef struct s_thread
+{
+    pthread_t id;
+    t_rays *ray;
+    int ray_id;
+} t_thread;
 
 typedef struct s_player 
 {
-    float px;
-    float py;
+    double px;
+    double py;
     int player_size;
-    float pangle;
-    float turn_direction;
-    float walk_direction;
-    float move_speed;
-    float rotation_speed;
+    double pangle;
+    double turn_direction;
+    double walk_direction;
+    double move_speed;
+    double rotation_speed;
 } t_player;
 
 typedef struct s_rays
 {
-    float ray_angle;
+    double ray_angle;
     bool rayfacingUP;
     bool rayfacingDOWN;
     bool rayfacingRIGHT;
     bool rayfacingLEFT;
-    float horwallhitX;
-    float horwallhitY;
-    float vertwallhitX;
-    float vertwallhitY;
+    double horwallhitX;
+    double horwallhitY;
+    double vertwallhitX;
+    double vertwallhitY;
     bool foundhorwallhit;
     bool foundvertwallhit;
     bool washitvertical;
-    float HorzDistance;
-    float VertDistance;
-    float WallHitX;
-    float WallHitY;
-    float distance;
-    float WallStripHeight;
+    double HorzDistance;
+    double VertDistance;
+    double WallHitX;
+    double WallHitY;
+    double distance;
+    double WallStripHeight;
 }t_rays;
 
 typedef struct	s_data 
@@ -69,14 +83,16 @@ typedef struct	s_data
 	int		endian;
     t_player *player;
     t_rays *rays;
+    t_thread *threads;
 }t_data; 
 
 
-float normalize_angle(float angle);
+double normalize_angle(double angle);
 int horz_interception (t_data *data, int i);
 int vert_interception (t_data *data, int i);
 void hor_ver_distances (t_data *data, int i);
-int collision(float x, float y);
+bool collision(double x, double y);
+void calculateDistance();
 
 
 

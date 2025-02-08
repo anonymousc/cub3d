@@ -1,37 +1,35 @@
 #include "Wolf3D.h"
 
-float normalize_angle(float angle)
+double normalize_angle(double angle)
 {
     angle = fmod(angle, 2 * PI);
     if (angle < 0)
         angle += 2 * PI;
     return angle;
 }
-float distance(float x1, float y1, float x2, float y2)
+double distance(double x1, double y1, double x2, double y2)
 {
     return sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
 }
 
 int horz_interception (t_data *data, int i)
 {
-    float xintercept;
-    int yintercept;
-    float xstep;
-    float ystep;
-    float nexthortouchX;
-    float nexthortouchY;
+    double xintercept;
+    double yintercept;
+    double xstep;
+    double ystep;
+    double nexthortouchX;
+    double nexthortouchY;
 
-    yintercept = (int)(data->player->py / TILE_SIZE) * TILE_SIZE + (data->rays[i].rayfacingDOWN ? TILE_SIZE : 0);
+    yintercept = (int)(data->player->py / TILE_SIZE) * TILE_SIZE;
+    yintercept += (data->rays[i].rayfacingDOWN ? TILE_SIZE : 0);
     xintercept = data->player->px + ((yintercept - data->player->py) / tan(data->rays[i].ray_angle));
 
     ystep = TILE_SIZE;
-    if (data->rays[i].rayfacingUP)
-        ystep *= -1;
-    xstep = ystep / tan(data->rays[i].ray_angle);
-    if (data->rays[i].rayfacingLEFT && xstep > 0)
-        xstep *= -1;
-    if (data->rays[i].rayfacingRIGHT && xstep < 0)
-        xstep *= -1;
+    ystep *= data->rays[i].rayfacingUP ? -1 : 1;
+    xstep = TILE_SIZE / tan(data->rays[i].ray_angle);
+    xstep *= (data->rays[i].rayfacingLEFT && xstep > 0) ? -1 : 1;
+    xstep *= (data->rays[i].rayfacingRIGHT && xstep < 0) ? -1 : 1;
     nexthortouchX = xintercept;
     nexthortouchY = yintercept;
     while (nexthortouchX >= 0 && nexthortouchX <= WINDOW_WIDTH && nexthortouchY >= 0 && nexthortouchY <= WINDOW_HEIGHT)
@@ -54,24 +52,22 @@ int horz_interception (t_data *data, int i)
 
 int vert_interception (t_data *data, int i)
 {
-    int xintercept;
-    float yintercept;
-    float xstep;
-    float ystep;
-    float nextverttouchX;
-    float nextverttouchY;
+    double xintercept;
+    double yintercept;
+    double xstep;
+    double ystep;
+    double nextverttouchX;
+    double nextverttouchY;
 
-    xintercept = (int)(data->player->px / TILE_SIZE) * TILE_SIZE + (data->rays[i].rayfacingRIGHT ? TILE_SIZE : 0);
+    xintercept = (int)(data->player->px / TILE_SIZE) * TILE_SIZE;
+    xintercept += data->rays[i].rayfacingRIGHT ? TILE_SIZE : 0;
     yintercept = data->player->py + ((xintercept - data->player->px) * tan(data->rays[i].ray_angle));
 
     xstep = TILE_SIZE;
-    if (data->rays[i].rayfacingLEFT)
-        xstep *= -1;
-    ystep = xstep * tan(data->rays[i].ray_angle);
-    if (data->rays[i].rayfacingUP && ystep > 0)
-        ystep *= -1;
-    if (data->rays[i].rayfacingDOWN && ystep < 0)
-        ystep *= -1;
+    xstep *= data->rays[i].rayfacingLEFT ? -1 : 1;
+    ystep = TILE_SIZE * tan(data->rays[i].ray_angle);
+    ystep *= (data->rays[i].rayfacingUP && ystep > 0) ? -1 : 1;
+    ystep *= (data->rays[i].rayfacingDOWN && ystep < 0) ? -1 : 1;
     nextverttouchX = xintercept;
     nextverttouchY = yintercept;
     while (nextverttouchX >= 0 && nextverttouchX <= WINDOW_WIDTH && nextverttouchY >= 0 && nextverttouchY <= WINDOW_HEIGHT)
@@ -103,7 +99,6 @@ void hor_ver_distances (t_data *data, int i)
         data->rays[i].VertDistance = distance(data->player->px, data->player->py, data->rays[i].vertwallhitX, data->rays[i].vertwallhitY);
     else    
         data->rays[i].VertDistance = LLONG_MAX;
-    data->rays[i].washitvertical = (data->rays[i].VertDistance < data->rays[i].HorzDistance);
     if (data->rays[i].HorzDistance < data->rays[i].VertDistance)
     {
         data->rays[i].WallHitX = data->rays[i].horwallhitX;
@@ -116,4 +111,5 @@ void hor_ver_distances (t_data *data, int i)
         data->rays[i].WallHitY = data->rays[i].vertwallhitY;
         data->rays[i].distance = data->rays[i].VertDistance;  
     }
+    data->rays[i].washitvertical = (data->rays[i].VertDistance < data->rays[i].HorzDistance);
 }
