@@ -2,20 +2,27 @@
 
 int num_of_rays = WINDOW_WIDTH / STRIP_WIDTH;
 double distProjPlane;
+double render_center = (WINDOW_HEIGHT / 2);
 
 void render3DWalls(t_data *data, int i);
 
+// 720 860;
 int map[MAP_X][MAP_Y] = {
-    {1,1,1,1,1,1,1,1,1,1},
-    {1,0,0,0,0,0,1,0,0,1},
-    {1,0,1,1,1,0,0,0,1,1},
-    {1,0,1,0,0,0,0,0,0,1},
-    {1,1,1,0,0,0,0,1,0,1},
-    {1,0,0,0,0,0,0,1,0,1},
-    {1,0,0,0,0,0,0,0,0,1},
-    {1,0,1,0,1,1,1,1,0,1},
-    {1,0,1,1,1,0,0,0,0,1},
-    {1,1,1,1,1,1,1,1,1,1}
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,0,0,0,0,0,1,0,0,0,0,0,0,0,1},
+    {1,0,1,1,1,0,0,0,1,0,0,0,0,0,1},
+    {1,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,1,1,0,0,0,0,1,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,1,0,1,1,1,1,0,0,0,0,0,0,1},
+    {1,0,1,1,1,0,0,0,0,0,0,0,0,0,1},
+    {1,1,1,1,1,1,1,1,1,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,1,0,1,1,1,1,0,0,0,0,0,0,1},
+    {1,0,1,1,1,0,0,0,0,0,0,0,0,0,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
 
@@ -114,13 +121,10 @@ void cast_ray(t_data *data, int strip_i)
     }
 }
 
-void *cast_all_rays(void *arg)
+void cast_all_rays(t_data *data)
 {
-    t_data *data = (t_data *)arg;
     double ray_angle = data->player->pangle - (FOV / 2);
     int i = 0;
-    int column_id = 0;
-
     init_rays(data, &data->rays[0], ray_angle);
     while (i < num_of_rays)
     {
@@ -129,9 +133,7 @@ void *cast_all_rays(void *arg)
         hor_ver_distances(data, i);
         render3DWalls(data , i);
         i++;
-        column_id++;
     }
-    return NULL;
 }
 int draw_rays(t_data *data)
 {
@@ -143,38 +145,50 @@ int draw_rays(t_data *data)
     }
 }
 
-void draw_rect(t_data *data, double startx, double starty, double endx, double endy)
+void draw_rect(t_data *data, double startx, double starty, double endx, double endy,int argb)
 {
+    (void)argb;
     double x = startx;
     while (x < endx)
     {
         double y = starty;
         while (y < endy)
         {
-            my_mlx_pixel_put(data, x, y, 0xFFFFFF);
+            my_mlx_pixel_put(data, x, y, argb);
             y++;
         }
         x++;
     }
 }
 
+unsigned int create_rgb(int r, int g, int b)
+{
+	return (r << 16 | g << 8 | b);
+}
+
 void render3DWalls(t_data *data, int i)
 {
     double distProjPlane = (WINDOW_WIDTH / 2) / tan(FOV / 2);
-    double wallStripHeight = (TILE_SIZE / data->rays[i].distance) * distProjPlane;
+    double correctDistance = data->rays[i].distance * cos(data->rays[i].ray_angle - data->player->pangle);
+    double wallStripHeight = (TILE_SIZE / correctDistance) * distProjPlane;
 
-    double starty = (WINDOW_HEIGHT / 2) - (wallStripHeight / 2);
-    double endy = (WINDOW_HEIGHT / 2) + (wallStripHeight / 2);
+    double starty = render_center - (wallStripHeight / 2);
+    double endy = render_center + (wallStripHeight / 2);
 
     if (starty < 0) 
         starty = 0;
     if (endy > WINDOW_HEIGHT) 
         endy = WINDOW_HEIGHT;
 
-    draw_rect(data, i * STRIP_WIDTH, starty, (i + 1) * STRIP_WIDTH, endy);
-
+    unsigned int wall_color;
+    if (data->rays[i].washitvertical)
+        wall_color= 255;
+    else
+        wall_color = 200;
+    wall_color = create_rgb(wall_color, wall_color, wall_color);
+    draw_rect(data, i * STRIP_WIDTH, starty, (i + 1) * STRIP_WIDTH, endy, wall_color);
 }
-
+ 
 int draw_tile(t_data *data, int x, int y, int color)
 {
     int i = 0;
@@ -258,12 +272,17 @@ int update(t_data *data)
     double next_px = data->player->px;
     double next_py = data->player->py;
 
-    data->player->pangle += data->player->turn_direction * data->player->rotation_speed;
+    data->player->pangle += normalize_angle(data->player->turn_direction * data->player->rotation_speed);
 
     int movestep = data->player->walk_direction * data->player->move_speed;
+    int sidestep = data->player->sidewalk * data->player->move_speed;
     next_px += cos(data->player->pangle) * movestep;
     next_py += sin(data->player->pangle) * movestep;
-
+    if (data->player->sidewalk == 1 || data->player->sidewalk == -1)
+    {
+        next_px -= sin(data->player->pangle) * sidestep;
+        next_py += cos(data->player->pangle) * sidestep;
+    }
     if (!collision(next_px, data->player->py))
         data->player->px = next_px;
     if (!collision(data->player->px, next_py))
@@ -287,7 +306,6 @@ int update(t_data *data)
 int keypress (int keycode, void *data)
 {
     t_data *img = (t_data *)data; 
-
     
     if (keycode == 65307)
     {
@@ -297,14 +315,42 @@ int keypress (int keycode, void *data)
         free(img);
         exit (0);
     }
+    else if (keycode == RIGHT)
+        img->player->sidewalk = 1;
+    else if (keycode == LEFT)
+        img->player->sidewalk = -1;
     else if(keycode == UP)
         img->player->walk_direction = 1;
     else if (keycode == DOWN)
         img->player->walk_direction = -1;
-    else if (keycode == TURN_RIGHT || keycode == RIGHT) 
+    else if (keycode == TURN_RIGHT) 
         img->player->turn_direction = 1;
-    else if (keycode == TURN_LEFT || keycode == LEFT)
+    else if (keycode == TURN_LEFT)
         img->player->turn_direction = -1;
+    else if (keycode == UP_ARROW)
+    {
+        render_center += 2 * TILE_SIZE;
+        if (render_center > WINDOW_HEIGHT)
+            render_center = WINDOW_HEIGHT;
+    }       
+    else if (keycode == DOWN_ARROW)
+    {
+        render_center -= 2 * TILE_SIZE;
+        if (render_center < 0)
+            render_center = 0;
+    }
+    
+    update(img);
+    return 0;
+}
+
+int keyrelease (int keycode, void *data)
+{
+    t_data *img = (t_data *)data; 
+
+    img->player->sidewalk =0;
+    img->player->walk_direction = 0;
+    img->player->turn_direction = 0;
 
     update(img);
     return 0;
@@ -318,32 +364,14 @@ void init_player (t_player *player)
     player->pangle = 3 * PI / 2;
     player->turn_direction = 0;
     player->walk_direction = 0;
-    player->move_speed = 4;
+    player->sidewalk = 0;
+    player->move_speed = 10;
     player->rotation_speed = 4 * (PI / 180);
 }
 
 int	c(void)
 {
 	exit(0);
-}
-
-void init_threads(t_data *data)
-{
-    int i = 0;
-    while (i < num_of_rays)
-    {
-        data->threads[i].id = i;
-        data->threads[i].ray_id = i;
-        pthread_create(&data->threads[i].id, NULL, cast_all_rays, data);
-        i++;
-    }
-    i = 0;
-    while (i < num_of_rays)
-    {
-        pthread_join(data->threads[i].id, NULL);
-        i++;
-    }
-
 }
 
 int main (int ac, char **av)
@@ -358,7 +386,6 @@ int main (int ac, char **av)
     data->img = mlx_new_image(data->mlx, TILE_SIZE * MAP_X, TILE_SIZE * MAP_Y);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
     init_player (player);
-    init_threads(data);
     data->player = player;
     data->rays = rays;
     fill_bg(data);
@@ -368,6 +395,7 @@ int main (int ac, char **av)
     draw_rays(data);
     mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
     mlx_hook(data->win, 02, (1L << 0), keypress, data);
+    mlx_hook(data->win, 03, (1L << 1), keyrelease, data);
     mlx_hook(data->win, 17, 0, c, data);
     mlx_loop(data->mlx);
 }

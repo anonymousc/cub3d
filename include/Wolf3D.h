@@ -18,15 +18,17 @@
 #define RIGHT 100
 #define TURN_RIGHT 65363
 #define TURN_LEFT 65361
-#define MAP_X  10
-#define MAP_Y 10
+#define UP_ARROW 65362
+#define DOWN_ARROW 65364
+#define MAP_X  15
+#define MAP_Y 15
 #define TILE_SIZE 64
 #define PI 3.141592653589793
 #define WINDOW_WIDTH TILE_SIZE * MAP_X
 #define WINDOW_HEIGHT TILE_SIZE * MAP_Y
 #define FOV  60 * (PI / 180)
 #define STRIP_WIDTH 1
-#define MINIMAP_SCALE 0.3
+#define MINIMAP_SCALE 0.25
 #define MINIMAP_TILE_SIZE (TILE_SIZE * MINIMAP_SCALE)
 
 typedef struct s_rays t_rays;
@@ -46,6 +48,7 @@ typedef struct s_player
     double pangle;
     double turn_direction;
     double walk_direction;
+    double sidewalk;
     double move_speed;
     double rotation_speed;
 } t_player;
