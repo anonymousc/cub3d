@@ -27,9 +27,11 @@ unsigned int get_pixel_color(t_texture *texture, void *addr, int x, int y)
 {
     char    *dst;
     unsigned int     color = 0;
+
+    x = x % 64;
     dst = addr + (y * texture->line_length + x * (texture->bits_per_pixel / 8));
 
-    color = (unsigned int)(*(dst + 2)) << 16 | (unsigned int)(*(dst + 1)) << 8 | (unsigned int)(*dst);
+    color = (unsigned int)(*(dst + 2) & 0xff) << 16 | (unsigned int)(*(dst + 1) & 0xff) << 8 | (unsigned int)(*dst) & 0xff;
     return color;
 }
 
@@ -37,6 +39,8 @@ unsigned int get_pixel_color(t_texture *texture, void *addr, int x, int y)
 void my_mlx_pixel_put(t_data *data, double x, double y, int color)
 {
 	char *dst;
+    if (x < 0 || x >= WINDOW_WIDTH || y < 0 || y >= WINDOW_HEIGHT)
+		return ;
 
 	dst = data->addr + ((int)y * data->line_length + (int)x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
@@ -157,11 +161,11 @@ int WallColor (t_data * data, int i, int textureoffsetX, int textureoffsetY)
 {
     int color = 0;
    
-    if ((data->rays[i].washitvertical) && (data->rays[i].WallHitX / TILE_SIZE) >= 0 && (data->rays[i].WallHitX / TILE_SIZE) <= 15)
+    if ((data->rays[i].washitvertical) && (data->rays[i].WallHitX / TILE_SIZE) >= 0 && (data->rays[i].WallHitX / TILE_SIZE) < 15)
     {
         color =  data->texture->south_texture[(textureoffsetY * TILE_SIZE) + textureoffsetX];
     }
-    else
+    else if (!(data->rays[i].washitvertical) && (data->rays[i].WallHitY / TILE_SIZE) >= 0 && (data->rays[i].WallHitY / TILE_SIZE) < 15)
         color =  data->texture->north_texture[(textureoffsetY * TILE_SIZE) + textureoffsetX];
     return color;
 }
