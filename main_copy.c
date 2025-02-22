@@ -183,19 +183,14 @@ void draw_strip(t_data *data, int i, double starty, double endy, double wallstri
     while (y < endy)
     {
         textureoffsetY = (y - starty) * ((double)TILE_SIZE / wallstripheight);
+        if (textureoffsetY < 0)
+            textureoffsetY = 0;
         color = WallColor(data, i, textureoffsetX, textureoffsetY);
         my_mlx_pixel_put(data, i, y, color);
         y++;
     }
         printf("%d\n", (textureoffsetY * TILE_SIZE) + textureoffsetX);
 }
-
-unsigned int create_rgb(int r, int g, int b)
-{
-	return (r << 16 | g << 8 | b);
-}
-
-
 
 void render3DWalls(t_data *data, int i)
 {
