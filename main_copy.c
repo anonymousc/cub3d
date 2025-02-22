@@ -3,20 +3,18 @@
 int num_of_rays = WINDOW_WIDTH / STRIP_WIDTH;
 double distProjPlane;
 double render_center = (WINDOW_HEIGHT / 2);
-
 void render3DWalls(t_data *data, int i);
 
-// 720 860;
 int map[MAP_X][MAP_Y] = {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-    {1,0,0,0,0,0,1,0,0,0,0,0,0,0,1},
-    {1,0,1,1,1,0,0,0,1,0,0,0,0,0,1},
-    {1,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,1,1,0,0,0,0,1,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
     {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,1,0,1,1,1,1,0,0,0,0,0,0,1},
-    {1,0,1,1,1,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,1,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+    {1,0,0,0,0,0,1,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,1,1,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,1,1,0,0,0,0,0,0,0,0,0,1},
     {1,1,1,1,1,1,1,1,1,0,0,0,0,0,1},
     {1,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
     {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -24,6 +22,16 @@ int map[MAP_X][MAP_Y] = {
     {1,0,1,1,1,0,0,0,0,0,0,0,0,0,1},
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
+
+unsigned int get_pixel_color(t_texture *texture, void *addr, int x, int y) 
+{
+    char    *dst;
+    unsigned int     color = 0;
+    dst = addr + (y * texture->line_length + x * (texture->bits_per_pixel / 8));
+
+    color = (unsigned int)(*(dst + 2)) << 16 | (unsigned int)(*(dst + 1)) << 8 | (unsigned int)(*dst);
+    return color;
+}
 
 
 void my_mlx_pixel_put(t_data *data, double x, double y, int color)
@@ -145,26 +153,45 @@ int draw_rays(t_data *data)
     }
 }
 
-void draw_rect(t_data *data, double startx, double starty, double endx, double endy,int argb)
+int WallColor (t_data * data, int i, int textureoffsetX, int textureoffsetY)
 {
-    (void)argb;
-    double x = startx;
-    while (x < endx)
+    int color = 0;
+   
+    if ((data->rays[i].washitvertical) && (data->rays[i].WallHitX / TILE_SIZE) >= 0 && (data->rays[i].WallHitX / TILE_SIZE) <= 15)
     {
-        double y = starty;
-        while (y < endy)
-        {
-            my_mlx_pixel_put(data, x, y, argb);
-            y++;
-        }
-        x++;
+        color =  data->texture->south_texture[(textureoffsetY * TILE_SIZE) + textureoffsetX];
     }
+    else
+        color =  data->texture->north_texture[(textureoffsetY * TILE_SIZE) + textureoffsetX];
+    return color;
+}
+
+void draw_strip(t_data *data, int i, double starty, double endy, double wallstripheight)
+{
+    int textureoffsetY;
+    int textureoffsetX;
+    int color = 0;
+    if (data->rays[i].washitvertical)
+        textureoffsetX = (int)data->rays[i].WallHitY % TILE_SIZE;
+    else
+        textureoffsetX = (int)data->rays[i].WallHitX % TILE_SIZE;
+    int y = starty;
+    while (y < endy)
+    {
+        textureoffsetY = (y - starty) * ((double)TILE_SIZE / wallstripheight);
+        color = WallColor(data, i, textureoffsetX, textureoffsetY);
+        my_mlx_pixel_put(data, i, y, color);
+        y++;
+    }
+        printf("%d\n", (textureoffsetY * TILE_SIZE) + textureoffsetX);
 }
 
 unsigned int create_rgb(int r, int g, int b)
 {
 	return (r << 16 | g << 8 | b);
 }
+
+
 
 void render3DWalls(t_data *data, int i)
 {
@@ -181,12 +208,7 @@ void render3DWalls(t_data *data, int i)
         endy = WINDOW_HEIGHT;
 
     unsigned int wall_color;
-    if (data->rays[i].washitvertical)
-        wall_color= 255;
-    else
-        wall_color = 200;
-    wall_color = create_rgb(wall_color, wall_color, wall_color);
-    draw_rect(data, i * STRIP_WIDTH, starty, (i + 1) * STRIP_WIDTH, endy, wall_color);
+    draw_strip(data, i, starty, endy, wallStripHeight);
 }
  
 int draw_tile(t_data *data, int x, int y, int color)
@@ -295,9 +317,6 @@ int update(t_data *data)
     draw_player(data, data->player, 0x0000FF);
     draw_rays(data);
 
-    data->player->walk_direction = 0;
-    data->player->turn_direction = 0;
-
     mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 
     return 0;
@@ -309,10 +328,11 @@ int keypress (int keycode, void *data)
     
     if (keycode == 65307)
     {
+        mlx_destroy_display(img->mlx);
         mlx_destroy_window(img->mlx, img->win);
-        free(img->player);
-        free(img->rays);
-        free(img);
+        // free(img->win);
+        // free(img->rays);
+        // free(img->mlx);
         exit (0);
     }
     else if (keycode == RIGHT)
@@ -369,22 +389,62 @@ void init_player (t_player *player)
     player->rotation_speed = 4 * (PI / 180);
 }
 
-int	c(void)
+int	c(void *data)
 {
+    t_data *img = (t_data *)data;
+    mlx_destroy_display(img->mlx);
+    mlx_destroy_window(img->mlx, img->win);
+    // free(img->win);
+    // free(img->rays);
+    // free(img->mlx);
 	exit(0);
+}
+
+void fill_color_buffers(t_data *data)
+{
+    data->texture->north_texture = malloc(sizeof(unsigned int) * TILE_SIZE * TILE_SIZE );
+    data->texture->south_texture = malloc(sizeof(unsigned int) * TILE_SIZE * TILE_SIZE );
+    // data->texture->east_texture = malloc(sizeof(unsigned int) * TILE_SIZE * TILE_SIZE );
+    // data->texture->west_texture = malloc(sizeof(unsigned int) * TILE_SIZE * TILE_SIZE );
+    // data->texture->north_texture[(TILE_SIZE * TILE_SIZE) - 1] = 0;
+    int y = 0;
+    while ( y < 64) 
+    {
+        int x = 0;
+        while (x < 64) 
+        {
+            data->texture->north_texture[y * 64 + x] = get_pixel_color(data->texture,  data->texture->north_addr, x, y);
+            data->texture->south_texture[y * 64 + x] = get_pixel_color(data->texture,  data->texture->south_addr, x, y);
+            // data->texture->east_texture[y * 64 + x] = get_pixel_color(data->texture,  data->texture->east_addr, x, y);
+            // data->texture->west_texture[y * 64 + x] = get_pixel_color(data->texture,  data->texture->west_addr, x, y);
+            x++;
+        }
+        y++;
+    }
 }
 
 int main (int ac, char **av)
 {
     (void)ac , (void)av;
+    int width, height;
     t_data *data = malloc(sizeof(t_data));
     t_player *player = malloc(sizeof (t_player));
     t_rays *rays = malloc (sizeof(t_rays) * (WINDOW_WIDTH / STRIP_WIDTH));
-
+    t_texture *textures = malloc (sizeof(t_texture));
     data->mlx = mlx_init();
-    data->win = mlx_new_window(data->mlx, TILE_SIZE * MAP_X, TILE_SIZE * MAP_Y, "cube");
+    data->win = mlx_new_window(data->mlx, TILE_SIZE * MAP_X, TILE_SIZE * MAP_Y, "cubed");
     data->img = mlx_new_image(data->mlx, TILE_SIZE * MAP_X, TILE_SIZE * MAP_Y);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
+    data->texture = textures;
+    data->texture->north_img = mlx_xpm_file_to_image(data->mlx, "black_cat3.xpm", &width, &height);
+    data->texture->north_addr = mlx_get_data_addr(data->texture->north_img, &data->texture->bits_per_pixel, &data->texture->line_length, &data->texture->endian);
+    data->texture->south_img = mlx_xpm_file_to_image(data->mlx, "black_cat4.xpm", &width, &height);
+    data->texture->south_addr = mlx_get_data_addr(data->texture->south_img, &data->texture->bits_per_pixel, &data->texture->line_length, &data->texture->endian);
+    // data->texture->east_img = mlx_xpm_file_to_image(data->mlx, "black_cat3.xpm", &width, &height);
+    // data->texture->east_addr = mlx_get_data_addr(data->texture->east_img, &data->texture->bits_per_pixel, &data->texture->line_length, &data->texture->endian);
+    // data->texture->west_img = mlx_xpm_file_to_image(data->mlx, "black_cat4.xpm", &width, &height);
+    // data->texture->west_addr = mlx_get_data_addr(data->texture->west_img, &data->texture->bits_per_pixel, &data->texture->line_length, &data->texture->endian);
+    fill_color_buffers(data);
     init_player (player);
     data->player = player;
     data->rays = rays;

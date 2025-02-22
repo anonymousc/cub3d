@@ -31,14 +31,24 @@
 #define MINIMAP_SCALE 0.25
 #define MINIMAP_TILE_SIZE (TILE_SIZE * MINIMAP_SCALE)
 
-typedef struct s_rays t_rays;
-
-typedef struct s_thread
+typedef struct s_texture
 {
-    pthread_t id;
-    t_rays *ray;
-    int ray_id;
-} t_thread;
+    unsigned int *north_texture;
+    unsigned int *south_texture;
+    unsigned int *east_texture;
+    unsigned int *west_texture;
+    void    *north_img;
+    void    *south_img;
+    void    *east_img;
+    void    *west_img;
+    void    *north_addr;
+    void    *south_addr;
+    void    *east_addr;
+    void    *west_addr;
+    int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+} t_texture;
 
 typedef struct s_player 
 {
@@ -86,7 +96,7 @@ typedef struct	s_data
 	int		endian;
     t_player *player;
     t_rays *rays;
-    t_thread *threads;
+    t_texture *texture;
 }t_data; 
 
 
