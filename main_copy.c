@@ -182,14 +182,14 @@ void draw_strip(t_data *data, int i, double starty, double endy, double wallstri
     int y = starty;
     while (y < endy)
     {
-        textureoffsetY = (y - starty) * ((double)TILE_SIZE / wallstripheight);
+        int DdistanceFromTop = y + (wallstripheight / 2) - (WINDOW_HEIGHT / 2);
+        textureoffsetY = DdistanceFromTop * ((double)TILE_SIZE / wallstripheight);
         if (textureoffsetY < 0)
             textureoffsetY = 0;
         color = WallColor(data, i, textureoffsetX, textureoffsetY);
         my_mlx_pixel_put(data, i, y, color);
         y++;
     }
-        printf("%d\n", (textureoffsetY * TILE_SIZE) + textureoffsetX);
 }
 
 void render3DWalls(t_data *data, int i)
@@ -346,19 +346,6 @@ int keypress (int keycode, void *data)
         img->player->turn_direction = 1;
     else if (keycode == TURN_LEFT)
         img->player->turn_direction = -1;
-    else if (keycode == UP_ARROW)
-    {
-        render_center += 2 * TILE_SIZE;
-        if (render_center > WINDOW_HEIGHT)
-            render_center = WINDOW_HEIGHT;
-    }       
-    else if (keycode == DOWN_ARROW)
-    {
-        render_center -= 2 * TILE_SIZE;
-        if (render_center < 0)
-            render_center = 0;
-    }
-    
     update(img);
     return 0;
 }
