@@ -49,12 +49,22 @@ void fill_bg(t_data *data)
 {
     int y = 0;
     int x;
-    while (y < WINDOW_HEIGHT)
+    while (y < WINDOW_HEIGHT / 2)
     {   
         x = 0;
         while (x < WINDOW_WIDTH)
         {
             my_mlx_pixel_put(data, x, y, 0x808080);
+            x++;
+        }
+        y++;
+    }
+    while (y < WINDOW_HEIGHT)
+    {   
+        x = 0;
+        while (x < WINDOW_WIDTH)
+        {
+            my_mlx_pixel_put(data, x, y, 0xcfcfcf);
             x++;
         }
         y++;
@@ -422,9 +432,9 @@ int main (int ac, char **av)
     data->img = mlx_new_image(data->mlx, TILE_SIZE * MAP_X, TILE_SIZE * MAP_Y);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
     data->texture = textures;
-    data->texture->north_img = mlx_xpm_file_to_image(data->mlx, "black_cat3.xpm", &width, &height);
+    data->texture->north_img = mlx_xpm_file_to_image(data->mlx, "./textures/skull_1_.xpm", &width, &height);
     data->texture->north_addr = mlx_get_data_addr(data->texture->north_img, &data->texture->bits_per_pixel, &data->texture->line_length, &data->texture->endian);
-    data->texture->south_img = mlx_xpm_file_to_image(data->mlx, "black_cat4.xpm", &width, &height);
+    data->texture->south_img = mlx_xpm_file_to_image(data->mlx, "./textures/skull_4_.xpm", &width, &height);
     data->texture->south_addr = mlx_get_data_addr(data->texture->south_img, &data->texture->bits_per_pixel, &data->texture->line_length, &data->texture->endian);
     // data->texture->east_img = mlx_xpm_file_to_image(data->mlx, "black_cat3.xpm", &width, &height);
     // data->texture->east_addr = mlx_get_data_addr(data->texture->east_img, &data->texture->bits_per_pixel, &data->texture->line_length, &data->texture->endian);

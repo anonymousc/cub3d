@@ -4,7 +4,7 @@ CC = cc
 
 
 CFLAGS = -I./include/ -O5 -fsanitize=address -g3 #-Wextra -Wall -Werror 
-SRC = main_copy.c intersections_alg.c
+SRC = main.c intersections_alg.c
 
 OBJ = $(SRC:.c=.o)
 
