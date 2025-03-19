@@ -32,7 +32,7 @@ int horz_interception (t_data *data, int i)
     xstep *= (data->rays[i].rayfacingRIGHT && xstep < 0) ? -1 : 1;
     nexthortouchX = xintercept;
     nexthortouchY = yintercept;
-    while (nexthortouchX >= 0 && nexthortouchX <= WINDOW_WIDTH && nexthortouchY >= 0 && nexthortouchY <= WINDOW_HEIGHT)
+    while (nexthortouchX >= 0 && nexthortouchX <= (MAP_X * TILE_SIZE) && nexthortouchY >= 0 && nexthortouchY <= (MAP_X * TILE_SIZE))
     {
         if (collision(nexthortouchX, (nexthortouchY - data->rays[i].rayfacingUP)))
         {
@@ -70,7 +70,7 @@ int vert_interception (t_data *data, int i)
     ystep *= (data->rays[i].rayfacingDOWN && ystep < 0) ? -1 : 1;
     nextverttouchX = xintercept;
     nextverttouchY = yintercept;
-    while (nextverttouchX >= 0 && nextverttouchX <= WINDOW_WIDTH && nextverttouchY >= 0 && nextverttouchY <= WINDOW_HEIGHT)
+    while (nextverttouchX >= 0 && nextverttouchX <= (MAP_X * TILE_SIZE) && nextverttouchY >= 0 && nextverttouchY <= (MAP_X * TILE_SIZE))
     {
         if (collision((nextverttouchX - data->rays[i].rayfacingLEFT), nextverttouchY))
         {

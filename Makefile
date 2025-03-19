@@ -3,7 +3,7 @@ NAME = Cub3D
 CC = cc
 
 
-CFLAGS = -I./include/ -O5 -fsanitize=address -g3 #-Wextra -Wall -Werror 
+CFLAGS = -I./include/ -O3 -fsanitize=address -g3 #-Wextra -Wall -Werror 
 SRC = main.c intersections_alg.c
 
 OBJ = $(SRC:.c=.o)

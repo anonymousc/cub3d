@@ -20,12 +20,13 @@
 #define TURN_LEFT 65361
 #define UP_ARROW 65362
 #define DOWN_ARROW 65364
-#define MAP_X  15
-#define MAP_Y 15
+#define MAP_X  40
+#define MAP_Y 40
 #define TILE_SIZE 64
-#define PI 3.141592653589793
-#define WINDOW_WIDTH TILE_SIZE * MAP_X
-#define WINDOW_HEIGHT TILE_SIZE * MAP_Y
+#define PI 3.14159265358979323846
+#define TILE_SIZE 64
+#define WINDOW_WIDTH 1000
+#define WINDOW_HEIGHT 1000
 #define FOV  60 * (PI / 180)
 #define STRIP_WIDTH 1
 #define MINIMAP_SCALE 0.25

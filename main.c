@@ -1,26 +1,36 @@
 #include "Wolf3D.h"
 
-int num_of_rays = WINDOW_WIDTH / STRIP_WIDTH;
+int num_of_rays = WINDOW_WIDTH;
 double distProjPlane;
 double render_center = (WINDOW_HEIGHT / 2);
 void render3DWalls(t_data *data, int i);
 
 int map[MAP_X][MAP_Y] = {
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,1,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
-    {1,0,0,0,0,0,1,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,1,1,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,1,1,0,0,0,0,0,0,0,0,0,1},
-    {1,1,1,1,1,1,1,1,1,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,1,0,1,1,1,1,0,0,0,0,0,0,1},
-    {1,0,1,1,1,0,0,0,0,0,0,0,0,0,1},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 };
 
 unsigned int get_pixel_color(t_texture *texture, void *addr, int x, int y) 
@@ -34,7 +44,6 @@ unsigned int get_pixel_color(t_texture *texture, void *addr, int x, int y)
     color = (unsigned int)(*(dst + 2) & 0xff) << 16 | (unsigned int)(*(dst + 1) & 0xff) << 8 | (unsigned int)(*dst) & 0xff;
     return color;
 }
-
 
 void my_mlx_pixel_put(t_data *data, double x, double y, int color)
 {
@@ -64,7 +73,7 @@ void fill_bg(t_data *data)
         x = 0;
         while (x < WINDOW_WIDTH)
         {
-            my_mlx_pixel_put(data, x, y, 0xcfcfcf);
+            my_mlx_pixel_put(data, x, y, 0xaa857d);
             x++;
         }
         y++;
@@ -171,11 +180,11 @@ int WallColor (t_data * data, int i, int textureoffsetX, int textureoffsetY)
 {
     int color = 0;
    
-    if ((data->rays[i].washitvertical) && (data->rays[i].WallHitX / TILE_SIZE) >= 0 && (data->rays[i].WallHitX / TILE_SIZE) < 15)
-    {
-        color =  data->texture->south_texture[(textureoffsetY * TILE_SIZE) + textureoffsetX];
-    }
-    else if (!(data->rays[i].washitvertical) && (data->rays[i].WallHitY / TILE_SIZE) >= 0 && (data->rays[i].WallHitY / TILE_SIZE) < 15)
+    // if ((data->rays[i].washitvertical) && (data->rays[i].WallHitX / TILE_SIZE) >= 0 && (data->rays[i].WallHitX / TILE_SIZE) < 15)
+    // {
+    //     color =  data->texture->south_texture[(textureoffsetY * TILE_SIZE) + textureoffsetX];
+    // }
+    // else if (!(data->rays[i].washitvertical) && (data->rays[i].WallHitY / TILE_SIZE) >= 0 && (data->rays[i].WallHitY / TILE_SIZE) < 15)
         color =  data->texture->north_texture[(textureoffsetY * TILE_SIZE) + textureoffsetX];
     return color;
 }
@@ -322,9 +331,9 @@ int update(t_data *data)
     clear_window(data);
     fill_bg(data);
     cast_all_rays(data);
-    draw_map(data);
-    draw_player(data, data->player, 0x0000FF);
-    draw_rays(data);
+    // draw_map(data);
+    // draw_player(data, data->player, 0x0000FF);
+    // draw_rays(data);
 
     mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 
@@ -374,8 +383,8 @@ int keyrelease (int keycode, void *data)
 
 void init_player (t_player *player)
 {
-    player->px = 225;
-    player->py = 225;
+    player->px = 100;
+    player->py = 100;
     player->player_size = 11;
     player->pangle = 3 * PI / 2;
     player->turn_direction = 0;
@@ -428,8 +437,8 @@ int main (int ac, char **av)
     t_rays *rays = malloc (sizeof(t_rays) * (WINDOW_WIDTH / STRIP_WIDTH));
     t_texture *textures = malloc (sizeof(t_texture));
     data->mlx = mlx_init();
-    data->win = mlx_new_window(data->mlx, TILE_SIZE * MAP_X, TILE_SIZE * MAP_Y, "cubed");
-    data->img = mlx_new_image(data->mlx, TILE_SIZE * MAP_X, TILE_SIZE * MAP_Y);
+    data->win = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "cubed");
+    data->img = mlx_new_image(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
     data->texture = textures;
     data->texture->north_img = mlx_xpm_file_to_image(data->mlx, "./textures/skull_1_.xpm", &width, &height);
@@ -446,9 +455,9 @@ int main (int ac, char **av)
     data->rays = rays;
     fill_bg(data);
     cast_all_rays(data);
-    draw_map(data);
-    draw_player(data, player, 0x0000FF);
-    draw_rays(data);
+    // draw_map(data);
+    // draw_player(data, player, 0x0000FF);
+    // draw_rays(data);
     mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
     mlx_hook(data->win, 02, (1L << 0), keypress, data);
     mlx_hook(data->win, 03, (1L << 1), keyrelease, data);
