@@ -5,33 +5,6 @@ double distProjPlane;
 double render_center = (WINDOW_HEIGHT / 2);
 void render3DWalls(t_data *data, int i);
 
-int map[MAP_X][MAP_Y] = {
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-};
 
 unsigned int get_pixel_color(t_texture *texture, void *addr, int x, int y) 
 {
@@ -54,6 +27,23 @@ void my_mlx_pixel_put(t_data *data, double x, double y, int color)
 	dst = data->addr + ((int)y * data->line_length + (int)x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
 }
+
+int create_rgb (int red , int green, int blue)
+{
+    return (red << 16 | green << 8 | blue);
+}
+int get_argb(char *c,t_data *data)
+{
+    int i = 0;
+    while(i < 2)
+    {
+        if(data->parsing->coloring[i].surface[0] == *c)
+            return (create_rgb(data->parsing->coloring[i].rgb[0], data->parsing->coloring[i].rgb[1], data->parsing->coloring[i].rgb[2]));
+            i++;
+    }
+    return (0);
+}
+
 void fill_bg(t_data *data)
 {
     int y = 0;
@@ -63,7 +53,7 @@ void fill_bg(t_data *data)
         x = 0;
         while (x < WINDOW_WIDTH)
         {
-            my_mlx_pixel_put(data, x, y, 0x808080);
+            my_mlx_pixel_put(data, x, y, get_argb("C", data));
             x++;
         }
         y++;
@@ -73,7 +63,7 @@ void fill_bg(t_data *data)
         x = 0;
         while (x < WINDOW_WIDTH)
         {
-            my_mlx_pixel_put(data, x, y, 0xaa857d);
+            my_mlx_pixel_put(data, x, y, get_argb("F", data));
             x++;
         }
         y++;
@@ -135,7 +125,6 @@ void init_rays (t_data *data, t_rays *first_ray, double ray_angle)
     }
 }
 
-
 void cast_ray(t_data *data, int strip_i)
 {
     double i = 0.0;
@@ -152,15 +141,15 @@ void cast_ray(t_data *data, int strip_i)
     }
 }
 
-void cast_all_rays(t_data *data)
+void cast_all_rays(t_data *data, t_map *map)
 {
     double ray_angle = data->player->pangle - (FOV / 2);
     int i = 0;
     init_rays(data, &data->rays[0], ray_angle);
     while (i < num_of_rays)
     {
-        horz_interception(data, i);
-        vert_interception(data, i);
+        horz_interception(data, i, map);
+        vert_interception(data, i, map);
         hor_ver_distances(data, i);
         render3DWalls(data , i);
         i++;
@@ -249,30 +238,6 @@ int draw_tile(t_data *data, int x, int y, int color)
     return 0;
 }
 
-int draw_map(t_data *data)
-{
-    int i = 0;
-    int j = 0;
-    int color;
-
-    while (i < MAP_Y) 
-    {
-        j = 0;
-        while (j < MAP_X) 
-        {
-            if (map[i][j] == 1)
-                color = 0xFFFFFF;
-            else
-                color = 0x000000;
-            draw_tile(data, j, i, color);
-            j++;
-        }
-        i++;
-    }
-    
-    return 0;
-}
-
 void draw_player(t_data *data, t_player *player, int color)
 {
     double scaled_size = player->player_size * MINIMAP_SCALE;
@@ -296,18 +261,21 @@ void draw_player(t_data *data, t_player *player, int color)
     draw_line(data, player, color);
 }
 
-bool collision(double x, double y)
+bool collision(double x, double y ,t_map *map)
 {
     int mapx = (int)(x / TILE_SIZE);
     int mapy = (int)(y / TILE_SIZE);
     
-    if (x < 0 || y < 0 || x >= (MAP_X * TILE_SIZE) || y >= (MAP_Y * TILE_SIZE))
+    if (x < 0 || y < 0 || x >= (map->x_len * TILE_SIZE) || y >= (map->y_len * TILE_SIZE))
         return true;
-        
-    return (map[mapy][mapx] == 1);
+    if(map->map[mapy])
+    {
+        return (map->map && map->map[mapy][mapx] == 1);
+    }
+    return (0);
 }
 
-int update(t_data *data)
+int update(t_data *data, t_map *map)
 {
     double next_px = data->player->px;
     double next_py = data->player->py;
@@ -323,14 +291,14 @@ int update(t_data *data)
         next_px -= sin(data->player->pangle) * sidestep;
         next_py += cos(data->player->pangle) * sidestep;
     }
-    if (!collision(next_px, data->player->py))
+    if (!collision(next_px, data->player->py, map))
         data->player->px = next_px;
-    if (!collision(data->player->px, next_py))
+    if (!collision(data->player->px, next_py, map))
         data->player->py = next_py;
 
     clear_window(data);
     fill_bg(data);
-    cast_all_rays(data);
+    cast_all_rays(data, map);
     // draw_map(data);
     // draw_player(data, data->player, 0x0000FF);
     // draw_rays(data);
@@ -365,7 +333,7 @@ int keypress (int keycode, void *data)
         img->player->turn_direction = 1;
     else if (keycode == TURN_LEFT)
         img->player->turn_direction = -1;
-    update(img);
+    update(img, img->parsing->map);
     return 0;
 }
 
@@ -377,20 +345,20 @@ int keyrelease (int keycode, void *data)
     img->player->walk_direction = 0;
     img->player->turn_direction = 0;
 
-    update(img);
+    update(img, img->parsing->map);
     return 0;
 }
 
-void init_player (t_player *player)
+void init_player (t_player *player, t_map *map)
 {
-    player->px = 100;
-    player->py = 100;
+    player->px = map->x;
+    player->py = map->y ;
     player->player_size = 11;
-    player->pangle = 3 * PI / 2;
+    player->pangle = map->n;
     player->turn_direction = 0;
     player->walk_direction = 0;
     player->sidewalk = 0;
-    player->move_speed = 10;
+    player->move_speed = 15;
     player->rotation_speed = 4 * (PI / 180);
 }
 
@@ -430,14 +398,17 @@ void fill_color_buffers(t_data *data)
 
 int main (int ac, char **av)
 {
-    (void)ac , (void)av;
+    t_parsing *parser;
+
+    parser = map_validation(file_validation(ac , av));
     int width, height;
     t_data *data = malloc(sizeof(t_data));
     t_player *player = malloc(sizeof (t_player));
     t_rays *rays = malloc (sizeof(t_rays) * (WINDOW_WIDTH / STRIP_WIDTH));
     t_texture *textures = malloc (sizeof(t_texture));
+    data->parsing = parser;
     data->mlx = mlx_init();
-    data->win = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "cubed");
+    data->win = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "cub3d");
     data->img = mlx_new_image(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
     data->texture = textures;
@@ -450,11 +421,11 @@ int main (int ac, char **av)
     // data->texture->west_img = mlx_xpm_file_to_image(data->mlx, "black_cat4.xpm", &width, &height);
     // data->texture->west_addr = mlx_get_data_addr(data->texture->west_img, &data->texture->bits_per_pixel, &data->texture->line_length, &data->texture->endian);
     fill_color_buffers(data);
-    init_player (player);
+    init_player (player, data->parsing->map);
     data->player = player;
     data->rays = rays;
     fill_bg(data);
-    cast_all_rays(data);
+    cast_all_rays(data , parser->map);
     // draw_map(data);
     // draw_player(data, player, 0x0000FF);
     // draw_rays(data);

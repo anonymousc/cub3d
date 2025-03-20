@@ -12,6 +12,18 @@
 #include <stdatomic.h>
 #include "../minilibx-linux/mlx.h"
 
+#define BUFFER_SIZE 3
+#define TEXTURE_SIZE 4
+#if TEXTURE_SIZE > 4
+#undef TEXTURE_SIZE
+#define TEXTURE_SIZE 4
+#endif
+#define COLOR_SIZE 3
+#if COLOR_SIZE > 3
+#undef COLOR_SIZE
+#define COLOR_SIZE 3
+#endif
+
 #define UP 119
 #define DOWN 115
 #define LEFT 97
@@ -20,8 +32,8 @@
 #define TURN_LEFT 65361
 #define UP_ARROW 65362
 #define DOWN_ARROW 65364
-#define MAP_X  40
-#define MAP_Y 40
+#define MAP_X  486
+#define MAP_Y 486
 #define TILE_SIZE 64
 #define PI 3.14159265358979323846
 #define TILE_SIZE 64
@@ -31,6 +43,34 @@
 #define STRIP_WIDTH 1
 #define MINIMAP_SCALE 0.25
 #define MINIMAP_TILE_SIZE (TILE_SIZE * MINIMAP_SCALE)
+
+typedef struct s_tex
+{
+    int iteration_level;
+    char *direction;
+    char *filename;
+}           t_tex;
+
+typedef struct s_color
+{
+    char *surface;
+    int  *rgb;
+}               t_color;
+
+typedef struct s_map
+{
+    double x, y, n;
+    int x_len;
+    int y_len;
+    int **map;
+}       t_map;
+
+typedef struct s_parsing
+{
+    t_tex *textures;
+    t_color *coloring;
+    t_map *map;
+}               t_parsing;
 
 typedef struct s_texture
 {
@@ -98,27 +138,53 @@ typedef struct	s_data
     t_player *player;
     t_rays *rays;
     t_texture *texture;
+    t_parsing *parsing;
 }t_data; 
 
 
 double normalize_angle(double angle);
-int horz_interception (t_data *data, int i);
-int vert_interception (t_data *data, int i);
+int horz_interception (t_data *data, int i, t_map *map);
+int vert_interception (t_data *data, int i, t_map *map);
 void hor_ver_distances (t_data *data, int i);
-bool collision(double x, double y);
+bool collision(double x, double y, t_map *map);
 void calculateDistance();
 
 
 
 
 //// PARSING /////
-typedef struct s_parsing
-{
-    char **coloring;
-    char **direction;
-    char **map;
-}               t_parsing;
+int         file_validation(int arg,char **str);
+t_parsing *map_validation(int fd);
+char *detailer_color(char *color);
 
-void    file_validation(int arg,char **str);
+t_parsing   *fill_texture(char **file_content);
+int         fill_coloring(char **line, t_parsing *parsing);
+void        free_coloring(t_parsing *parsing);
+void        free_textures(t_parsing *parsing);
+int get_len(char **s);
+char *textures(char *line);
+/// APIS /////////
+int     ft_strncmp(char *s1 ,char *s2, int n);
+int     ft_strcmp(char *s1 ,char *s2);
+char	*ft_strchr(char *s, int c);
+char	*ft_strjoin_map(char *result, char *buffer);
+char	**ft_split(char *s, char c);
+char	*ft_strnstr(const char *haystack, const char *needle, size_t n);
+void    ft_free(char **line);
+int     ft_atoi(char *str);
+size_t	ft_strlcpy(char *dest, char *src, size_t size);
+char	*ft_substr(char *s, unsigned int start, size_t len);
+int is_space(char c);
+int	map_parser(char *file, t_parsing *parsing);
+/// NEXT_LINE ////
+char	*get_next_line(int fd);
+size_t	ft_strlen(char *s);
+char	*get_new_line(char *s);
+char	*ft_strdup(char *s1);
+char	*ft_strjoin(char *s, char *s1);
+char	*ft_substr(char *s, unsigned int start, size_t len);
+char	*ft_strchr(char *s, int c);
+char	*set_buffer(char *buffer, char *line);
+/////////////////
 
 #endif

@@ -12,7 +12,7 @@ double distance(double x1, double y1, double x2, double y2)
     return sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
 }
 
-int horz_interception (t_data *data, int i)
+int horz_interception (t_data *data, int i , t_map *map)
 {
     double xintercept;
     double yintercept;
@@ -32,9 +32,9 @@ int horz_interception (t_data *data, int i)
     xstep *= (data->rays[i].rayfacingRIGHT && xstep < 0) ? -1 : 1;
     nexthortouchX = xintercept;
     nexthortouchY = yintercept;
-    while (nexthortouchX >= 0 && nexthortouchX <= (MAP_X * TILE_SIZE) && nexthortouchY >= 0 && nexthortouchY <= (MAP_X * TILE_SIZE))
+    while (nexthortouchX >= 0 && nexthortouchX <= (map->x_len * TILE_SIZE) && nexthortouchY >= 0 && nexthortouchY <= (map->y_len * TILE_SIZE))
     {
-        if (collision(nexthortouchX, (nexthortouchY - data->rays[i].rayfacingUP)))
+        if (collision(nexthortouchX, (nexthortouchY - data->rays[i].rayfacingUP), map))
         {
             data->rays[i].foundhorwallhit = true;
             data->rays[i].horwallhitX = nexthortouchX;
@@ -50,7 +50,7 @@ int horz_interception (t_data *data, int i)
     return 0;
 }
 
-int vert_interception (t_data *data, int i)
+int vert_interception (t_data *data, int i, t_map *map)
 {
     double xintercept;
     double yintercept;
@@ -70,9 +70,10 @@ int vert_interception (t_data *data, int i)
     ystep *= (data->rays[i].rayfacingDOWN && ystep < 0) ? -1 : 1;
     nextverttouchX = xintercept;
     nextverttouchY = yintercept;
-    while (nextverttouchX >= 0 && nextverttouchX <= (MAP_X * TILE_SIZE) && nextverttouchY >= 0 && nextverttouchY <= (MAP_X * TILE_SIZE))
+    
+    while (nextverttouchX >= 0 && nextverttouchX <= (map->x_len * TILE_SIZE) && nextverttouchY >= 0 && nextverttouchY <= (map->y_len * TILE_SIZE))
     {
-        if (collision((nextverttouchX - data->rays[i].rayfacingLEFT), nextverttouchY))
+        if (collision((nextverttouchX - data->rays[i].rayfacingLEFT ), nextverttouchY, map))
         {
             data->rays[i].foundvertwallhit = true;
             data->rays[i].vertwallhitX = nextverttouchX;
