@@ -3,8 +3,8 @@ SO ./textures/skull_2_.xpm
 WE ./textures/skull_3_.xpm
 EA ./textures/skull_4_.xpm
 
-F 51,25,3
-C 204,204,255
+            F 4,24,253
+C        11,    1,   11
 
  1111111        111111111
 110000011      10000000001

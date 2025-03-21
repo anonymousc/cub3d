@@ -168,13 +168,20 @@ int draw_rays(t_data *data)
 int WallColor (t_data * data, int i, int textureoffsetX, int textureoffsetY)
 {
     int color = 0;
-   
-    // if ((data->rays[i].washitvertical) && (data->rays[i].WallHitX / TILE_SIZE) >= 0 && (data->rays[i].WallHitX / TILE_SIZE) < 15)
-    // {
-    //     color =  data->texture->south_texture[(textureoffsetY * TILE_SIZE) + textureoffsetX];
-    // }
-    // else if (!(data->rays[i].washitvertical) && (data->rays[i].WallHitY / TILE_SIZE) >= 0 && (data->rays[i].WallHitY / TILE_SIZE) < 15)
-        color =  data->texture->north_texture[(textureoffsetY * TILE_SIZE) + textureoffsetX];
+    if (!data->rays[i].washitvertical)
+    {
+        if (data->rays[i].rayfacingUP)
+            color =  data->texture->north_texture[(textureoffsetY * TILE_SIZE) + textureoffsetX];
+        if (data->rays[i].rayfacingDOWN)
+            color =  data->texture->south_texture[(textureoffsetY * TILE_SIZE) + textureoffsetX];
+    }
+    else
+    {
+        if (data->rays[i].rayfacingLEFT)
+            color = data->texture->east_texture[(textureoffsetY * TILE_SIZE) + textureoffsetX];
+        if (data->rays[i].rayfacingRIGHT)
+            color = data->texture->west_texture[(textureoffsetY * TILE_SIZE) + textureoffsetX];
+    }
     return color;
 }
 
@@ -299,9 +306,6 @@ int update(t_data *data, t_map *map)
     clear_window(data);
     fill_bg(data);
     cast_all_rays(data, map);
-    // draw_map(data);
-    // draw_player(data, data->player, 0x0000FF);
-    // draw_rays(data);
 
     mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 
@@ -377,9 +381,8 @@ void fill_color_buffers(t_data *data)
 {
     data->texture->north_texture = malloc(sizeof(unsigned int) * TILE_SIZE * TILE_SIZE );
     data->texture->south_texture = malloc(sizeof(unsigned int) * TILE_SIZE * TILE_SIZE );
-    // data->texture->east_texture = malloc(sizeof(unsigned int) * TILE_SIZE * TILE_SIZE );
-    // data->texture->west_texture = malloc(sizeof(unsigned int) * TILE_SIZE * TILE_SIZE );
-    // data->texture->north_texture[(TILE_SIZE * TILE_SIZE) - 1] = 0;
+    data->texture->east_texture = malloc(sizeof(unsigned int) * TILE_SIZE * TILE_SIZE );
+    data->texture->west_texture = malloc(sizeof(unsigned int) * TILE_SIZE * TILE_SIZE );
     int y = 0;
     while ( y < 64) 
     {
@@ -388,14 +391,25 @@ void fill_color_buffers(t_data *data)
         {
             data->texture->north_texture[y * 64 + x] = get_pixel_color(data->texture,  data->texture->north_addr, x, y);
             data->texture->south_texture[y * 64 + x] = get_pixel_color(data->texture,  data->texture->south_addr, x, y);
-            // data->texture->east_texture[y * 64 + x] = get_pixel_color(data->texture,  data->texture->east_addr, x, y);
-            // data->texture->west_texture[y * 64 + x] = get_pixel_color(data->texture,  data->texture->west_addr, x, y);
+            data->texture->east_texture[y * 64 + x] = get_pixel_color(data->texture,  data->texture->east_addr, x, y);
+            data->texture->west_texture[y * 64 + x] = get_pixel_color(data->texture,  data->texture->west_addr, x, y);
             x++;
         }
         y++;
     }
 }
+char *get_texture(t_data *data , char *direction)
+{
 
+    int i = 0;
+    while (i < 4)
+    {
+        if(*(data->parsing->textures[i].direction) == *direction)
+            return (data->parsing->textures[i].filename);
+        i++;
+    }
+    return (NULL);
+}
 int main (int ac, char **av)
 {
     t_parsing *parser;
@@ -412,23 +426,20 @@ int main (int ac, char **av)
     data->img = mlx_new_image(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
     data->texture = textures;
-    data->texture->north_img = mlx_xpm_file_to_image(data->mlx, "./textures/skull_1_.xpm", &width, &height);
+    data->texture->north_img = mlx_xpm_file_to_image(data->mlx, get_texture(data, "NO"), &width, &height);
     data->texture->north_addr = mlx_get_data_addr(data->texture->north_img, &data->texture->bits_per_pixel, &data->texture->line_length, &data->texture->endian);
-    data->texture->south_img = mlx_xpm_file_to_image(data->mlx, "./textures/skull_4_.xpm", &width, &height);
+    data->texture->south_img = mlx_xpm_file_to_image(data->mlx, get_texture(data, "SO"), &width, &height);
     data->texture->south_addr = mlx_get_data_addr(data->texture->south_img, &data->texture->bits_per_pixel, &data->texture->line_length, &data->texture->endian);
-    // data->texture->east_img = mlx_xpm_file_to_image(data->mlx, "black_cat3.xpm", &width, &height);
-    // data->texture->east_addr = mlx_get_data_addr(data->texture->east_img, &data->texture->bits_per_pixel, &data->texture->line_length, &data->texture->endian);
-    // data->texture->west_img = mlx_xpm_file_to_image(data->mlx, "black_cat4.xpm", &width, &height);
-    // data->texture->west_addr = mlx_get_data_addr(data->texture->west_img, &data->texture->bits_per_pixel, &data->texture->line_length, &data->texture->endian);
+    data->texture->east_img = mlx_xpm_file_to_image(data->mlx, get_texture(data, "EA") ,&width, &height);
+    data->texture->east_addr = mlx_get_data_addr(data->texture->east_img, &data->texture->bits_per_pixel, &data->texture->line_length, &data->texture->endian);
+    data->texture->west_img = mlx_xpm_file_to_image(data->mlx, get_texture(data, "WE"), &width, &height);
+    data->texture->west_addr = mlx_get_data_addr(data->texture->west_img, &data->texture->bits_per_pixel, &data->texture->line_length, &data->texture->endian);
     fill_color_buffers(data);
     init_player (player, data->parsing->map);
     data->player = player;
     data->rays = rays;
     fill_bg(data);
     cast_all_rays(data , parser->map);
-    // draw_map(data);
-    // draw_player(data, player, 0x0000FF);
-    // draw_rays(data);
     mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
     mlx_hook(data->win, 02, (1L << 0), keypress, data);
     mlx_hook(data->win, 03, (1L << 1), keyrelease, data);
