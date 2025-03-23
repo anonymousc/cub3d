@@ -1,52 +1,29 @@
 #include "Wolf3D.h"
 
-double normalize_angle(double angle)
-{
-    angle = fmod(angle, 2 * PI);
-    if (angle < 0)
-        angle += 2 * PI;
-    return angle;
-}
-double distance(double x1, double y1, double x2, double y2)
-{
-    return sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
-}
-
 int horz_interception (t_data *data, int i , t_map *map)
 {
     double xintercept;
     double yintercept;
-    double xstep;
-    double ystep;
     double nexthortouchX;
     double nexthortouchY;
 
     yintercept = (int)(data->player->py / TILE_SIZE) * TILE_SIZE;
-    yintercept += (data->rays[i].rayfacingDOWN ? TILE_SIZE : 0);
+    if (data->rays[i].rayfacingDOWN)
+        yintercept += TILE_SIZE;
     xintercept = data->player->px + ((yintercept - data->player->py) / tan(data->rays[i].ray_angle));
 
-    ystep = TILE_SIZE;
-    ystep *= data->rays[i].rayfacingUP ? -1 : 1;
-    xstep = TILE_SIZE / tan(data->rays[i].ray_angle);
-    xstep *= (data->rays[i].rayfacingLEFT && xstep > 0) ? -1 : 1;
-    xstep *= (data->rays[i].rayfacingRIGHT && xstep < 0) ? -1 : 1;
+    data->rays[i].ystep = TILE_SIZE;
+    if (data->rays[i].rayfacingUP)
+        data->rays[i].ystep *= -1;
+    data->rays[i].xstep = TILE_SIZE / tan(data->rays[i].ray_angle);
+    if (data->rays[i].rayfacingLEFT && data->rays[i].xstep > 0)
+        data->rays[i].xstep *= -1;
+    if (data->rays[i].rayfacingRIGHT && data->rays[i].xstep < 0)
+        data->rays[i].xstep *= -1;
     nexthortouchX = xintercept;
     nexthortouchY = yintercept;
-    while (nexthortouchX >= 0 && nexthortouchX <= (map->x_len * TILE_SIZE) && nexthortouchY >= 0 && nexthortouchY <= (map->y_len * TILE_SIZE))
-    {
-        if (collision(nexthortouchX, (nexthortouchY - data->rays[i].rayfacingUP), map))
-        {
-            data->rays[i].foundhorwallhit = true;
-            data->rays[i].horwallhitX = nexthortouchX;
-            data->rays[i].horwallhitY = nexthortouchY;
-            break;
-        }
-        else
-        {
-            nexthortouchX += xstep;
-            nexthortouchY += ystep;
-        }
-    }
+    
+    process_hor_interception(data, map, i, nexthortouchX, nexthortouchY);
     return 0;
 }
 
@@ -54,38 +31,26 @@ int vert_interception (t_data *data, int i, t_map *map)
 {
     double xintercept;
     double yintercept;
-    double xstep;
-    double ystep;
     double nextverttouchX;
     double nextverttouchY;
 
     xintercept = (int)(data->player->px / TILE_SIZE) * TILE_SIZE;
-    xintercept += data->rays[i].rayfacingRIGHT ? TILE_SIZE : 0;
+    if (data->rays[i].rayfacingRIGHT)
+        xintercept += TILE_SIZE;
     yintercept = data->player->py + ((xintercept - data->player->px) * tan(data->rays[i].ray_angle));
 
-    xstep = TILE_SIZE;
-    xstep *= data->rays[i].rayfacingLEFT ? -1 : 1;
-    ystep = TILE_SIZE * tan(data->rays[i].ray_angle);
-    ystep *= (data->rays[i].rayfacingUP && ystep > 0) ? -1 : 1;
-    ystep *= (data->rays[i].rayfacingDOWN && ystep < 0) ? -1 : 1;
+    data->rays[i].xstep = TILE_SIZE;
+    if(data->rays[i].rayfacingLEFT)
+        data->rays[i].xstep *= -1;
+    data->rays[i].ystep = TILE_SIZE * tan(data->rays[i].ray_angle);
+    if(data->rays[i].rayfacingUP && data->rays[i].ystep > 0)
+        data->rays[i].ystep *= -1;
+    if(data->rays[i].rayfacingDOWN && data->rays[i].ystep < 0)
+        data->rays[i].ystep *= -1;
     nextverttouchX = xintercept;
     nextverttouchY = yintercept;
     
-    while (nextverttouchX >= 0 && nextverttouchX <= (map->x_len * TILE_SIZE) && nextverttouchY >= 0 && nextverttouchY <= (map->y_len * TILE_SIZE))
-    {
-        if (collision((nextverttouchX - data->rays[i].rayfacingLEFT ), nextverttouchY, map))
-        {
-            data->rays[i].foundvertwallhit = true;
-            data->rays[i].vertwallhitX = nextverttouchX;
-            data->rays[i].vertwallhitY = nextverttouchY;
-            break;
-        }
-        else
-        {
-            nextverttouchX += xstep;
-            nextverttouchY += ystep;
-        }
-    }
+    process_vert_interception (data, map, i, nextverttouchX, nextverttouchY);
     
     return 0;
 }
@@ -95,11 +60,11 @@ void hor_ver_distances (t_data *data, int i)
     if (data->rays[i].foundhorwallhit)
         data->rays[i].HorzDistance = distance(data->player->px, data->player->py, data->rays[i].horwallhitX, data->rays[i].horwallhitY);
     else 
-        data->rays[i].HorzDistance = LLONG_MAX;
+        data->rays[i].HorzDistance = INT_MAX;
     if (data->rays[i].foundvertwallhit)
         data->rays[i].VertDistance = distance(data->player->px, data->player->py, data->rays[i].vertwallhitX, data->rays[i].vertwallhitY);
     else    
-        data->rays[i].VertDistance = LLONG_MAX;
+        data->rays[i].VertDistance = INT_MAX;
     if (data->rays[i].HorzDistance < data->rays[i].VertDistance)
     {
         data->rays[i].WallHitX = data->rays[i].horwallhitX;

@@ -32,6 +32,7 @@ int create_rgb (int red , int green, int blue)
 {
     return (red << 16 | green << 8 | blue);
 }
+
 int get_argb(char *c,t_data *data)
 {
     int i = 0;
@@ -75,35 +76,27 @@ void clear_window (t_data *data)
     mlx_clear_window(data->mlx, data->win);
 }
 
-int draw_line(t_data *data, t_player *player, int color)
+void init_rays_angles(t_data *data, t_rays *first_ray, double ray_angle)
 {
-    int line_length = 60 * MINIMAP_SCALE;
-    double scaled_x = player->px * MINIMAP_SCALE;
-    double scaled_y = player->py * MINIMAP_SCALE;
+    int i;
 
-    int i = 0;
-    while (i < line_length)
-    {
-        int current_x = scaled_x + (cos(player->pangle) * i);
-        int current_y = scaled_y + (sin(player->pangle) * i);
-        my_mlx_pixel_put(data, current_x, current_y, color);
-        i++;
-    }
-    return 0;
-}
-
-void init_rays (t_data *data, t_rays *first_ray, double ray_angle)
-{
     first_ray->ray_angle = normalize_angle(ray_angle);
     double angle_increment = FOV / num_of_rays;
-    int i = 1;
+    i = 1;
     while (i < num_of_rays)
     {
         data->rays[i].ray_angle = normalize_angle(data->rays[i - 1].ray_angle + angle_increment);
         i++;
     }
-    i = 0;
-    while (i < num_of_rays)
+}
+
+void init_rays (t_data *data, t_rays *first_ray, double ray_angle)
+{
+    int i;
+
+    init_rays_angles(data, first_ray, ray_angle);
+    i = -1;
+    while (++i < num_of_rays)
     {
         data->rays[i].rayfacingDOWN = data->rays[i].ray_angle > 0 && data->rays[i].ray_angle < PI;
         data->rays[i].rayfacingUP = !data->rays[i].rayfacingDOWN;
@@ -121,7 +114,8 @@ void init_rays (t_data *data, t_rays *first_ray, double ray_angle)
         data->rays[i].HorzDistance = 0;
         data->rays[i].VertDistance = 0;
         data->rays[i].distance = 0;
-        i++;
+        data->rays[i].xstep = 0;
+        data->rays[i].ystep = 0;
     }
 }
 
@@ -224,49 +218,6 @@ void render3DWalls(t_data *data, int i)
     unsigned int wall_color;
     draw_strip(data, i, starty, endy, wallStripHeight);
 }
- 
-int draw_tile(t_data *data, int x, int y, int color)
-{
-    int i = 0;
-    int j = 0;
-    int startX = x * MINIMAP_TILE_SIZE;
-    int startY = y * MINIMAP_TILE_SIZE;
-
-    while (i < MINIMAP_TILE_SIZE)
-    {
-        j = 0;
-        while (j < MINIMAP_TILE_SIZE)
-        {
-            my_mlx_pixel_put(data, startX + i, startY + j, color);
-            j++;
-        }
-        i++;
-    }
-    return 0;
-}
-
-void draw_player(t_data *data, t_player *player, int color)
-{
-    double scaled_size = player->player_size * MINIMAP_SCALE;
-    double scaled_x = player->px * MINIMAP_SCALE;
-    double scaled_y = player->py * MINIMAP_SCALE;
-    
-    int i = 0;
-    while (i < scaled_size)
-    {
-        int j = 0;
-        while (j < scaled_size)
-        {
-            my_mlx_pixel_put(data, 
-                ((scaled_x - scaled_size / 2) + i),
-                ((scaled_y - scaled_size / 2) + j),
-                color);
-            j++;
-        }
-        i++;
-    }
-    draw_line(data, player, color);
-}
 
 bool collision(double x, double y ,t_map *map)
 {
@@ -282,15 +233,27 @@ bool collision(double x, double y ,t_map *map)
     return (0);
 }
 
-int update(t_data *data, t_map *map)
+void f(t_data *data)
 {
-    double next_px = data->player->px;
-    double next_py = data->player->py;
+    clear_window(data);
+    fill_bg(data);
+    cast_all_rays(data, data->parsing->map);
+    mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
+}
+int update(t_data *data)
+{
+    double next_px;
+    double next_py;
+    t_map *map;  
+    int movestep;
+    int sidestep;
 
+    next_px = data->player->px;
+    next_py = data->player->py;
+    map = data->parsing->map;    
     data->player->pangle += normalize_angle(data->player->turn_direction * data->player->rotation_speed);
-
-    int movestep = data->player->walk_direction * data->player->move_speed;
-    int sidestep = data->player->sidewalk * data->player->move_speed;
+    movestep = data->player->walk_direction * data->player->move_speed;
+    sidestep = data->player->sidewalk * data->player->move_speed;
     next_px += cos(data->player->pangle) * movestep;
     next_py += sin(data->player->pangle) * movestep;
     if (data->player->sidewalk == 1 || data->player->sidewalk == -1)
@@ -302,13 +265,7 @@ int update(t_data *data, t_map *map)
         data->player->px = next_px;
     if (!collision(data->player->px, next_py, map))
         data->player->py = next_py;
-
-    clear_window(data);
-    fill_bg(data);
-    cast_all_rays(data, map);
-
-    mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
-
+    f(data);
     return 0;
 }
 
@@ -320,24 +277,20 @@ int keypress (int keycode, void *data)
     {
         mlx_destroy_display(img->mlx);
         mlx_destroy_window(img->mlx, img->win);
-        // free(img->win);
-        // free(img->rays);
-        // free(img->mlx);
         exit (0);
     }
     else if (keycode == RIGHT)
         img->player->sidewalk = 1;
     else if (keycode == LEFT)
         img->player->sidewalk = -1;
-    else if(keycode == UP)
+    if(keycode == UP)
         img->player->walk_direction = 1;
     else if (keycode == DOWN)
         img->player->walk_direction = -1;
-    else if (keycode == TURN_RIGHT) 
+    if (keycode == TURN_RIGHT) 
         img->player->turn_direction = 1;
     else if (keycode == TURN_LEFT)
         img->player->turn_direction = -1;
-    update(img, img->parsing->map);
     return 0;
 }
 
@@ -345,11 +298,12 @@ int keyrelease (int keycode, void *data)
 {
     t_data *img = (t_data *)data; 
 
-    img->player->sidewalk =0;
-    img->player->walk_direction = 0;
-    img->player->turn_direction = 0;
-
-    update(img, img->parsing->map);
+    if (keycode == RIGHT || keycode == LEFT)
+        img->player->sidewalk = 0;
+    if (keycode == UP || keycode == DOWN)
+        img->player->walk_direction = 0;
+    if (keycode == TURN_RIGHT || keycode == TURN_LEFT)
+        img->player->turn_direction = 0;
     return 0;
 }
 
@@ -357,13 +311,13 @@ void init_player (t_player *player, t_map *map)
 {
     player->px = map->x;
     player->py = map->y ;
-    player->player_size = 11;
+    player->player_size = 1;
     player->pangle = map->n;
     player->turn_direction = 0;
     player->walk_direction = 0;
     player->sidewalk = 0;
-    player->move_speed = 15;
-    player->rotation_speed = 4 * (PI / 180);
+    player->move_speed = 1.2;
+    player->rotation_speed = 0.35 * (PI / 180);
 }
 
 int	c(void *data)
@@ -371,9 +325,6 @@ int	c(void *data)
     t_data *img = (t_data *)data;
     mlx_destroy_display(img->mlx);
     mlx_destroy_window(img->mlx, img->win);
-    // free(img->win);
-    // free(img->rays);
-    // free(img->mlx);
 	exit(0);
 }
 
@@ -444,5 +395,6 @@ int main (int ac, char **av)
     mlx_hook(data->win, 02, (1L << 0), keypress, data);
     mlx_hook(data->win, 03, (1L << 1), keyrelease, data);
     mlx_hook(data->win, 17, 0, c, data);
+    mlx_loop_hook(data->mlx, update, data);
     mlx_loop(data->mlx);
 }

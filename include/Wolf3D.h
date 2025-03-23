@@ -37,8 +37,8 @@
 #define TILE_SIZE 64
 #define PI 3.14159265358979323846
 #define TILE_SIZE 64
-#define WINDOW_WIDTH 1000
-#define WINDOW_HEIGHT 1000
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
 #define FOV  60 * (PI / 180)
 #define STRIP_WIDTH 1
 #define MINIMAP_SCALE 0.25
@@ -124,6 +124,8 @@ typedef struct s_rays
     double WallHitY;
     double distance;
     double WallStripHeight;
+    double xstep;
+    double ystep;
 }t_rays;
 
 typedef struct	s_data 
@@ -144,10 +146,12 @@ typedef struct	s_data
 
 double normalize_angle(double angle);
 int horz_interception (t_data *data, int i, t_map *map);
+void process_hor_interception (t_data *data, t_map *map, int i, double nexthortouchX, double nexthortouchY);
 int vert_interception (t_data *data, int i, t_map *map);
+void process_vert_interception (t_data *data, t_map *map, int i, double nextverttouchX, double nextverttouchY);
 void hor_ver_distances (t_data *data, int i);
 bool collision(double x, double y, t_map *map);
-void calculateDistance();
+double distance(double x1, double y1, double x2, double y2);
 
 
 
