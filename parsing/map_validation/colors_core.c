@@ -109,6 +109,8 @@ int getqomalen(char *str)
 int double_check(char *str)
 {
 	char **color_detailer;
+	while (is_space(*str))
+		str++;
 	str += 1;
 	if(!getqomalen(str))
 		return (1);
@@ -116,6 +118,10 @@ int double_check(char *str)
 	if(!color_detailer || check_if_valid_number(color_detailer))
 		return (ft_free(color_detailer), 1);
 	return (ft_free(color_detailer), 0);
+}
+int check_dup(char **color, int indexer)
+{
+	return (*color[indexer] == *color[indexer + 1]);
 }
 int final_check(char **color)
 {
@@ -131,7 +137,7 @@ int final_check(char **color)
 		}
 		i++;
 	}
-	if(nearby(color))
+	if(nearby(color) || check_dup(color, indexer))
 		return (1);
 	return (0);
 }
