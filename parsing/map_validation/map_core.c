@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_core.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:07:20 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/23 20:12:07 by aait-bou         ###   ########.fr       */
+/*   Updated: 2025/03/24 18:25:59 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,10 +166,6 @@ int base_cases(char **map, int j , int i)
 }
 int edge_cases(char **map)
 {
-	for (size_t i = 0; map[i]; i++)
-	{
-		printf("%s\n", map[i]);
-	}
 	if(map[0] && map[1])
 	{
 		int i = 0;
@@ -180,7 +176,7 @@ int edge_cases(char **map)
 			while(map[j][i])
 			{
 				if(map[j + 1] && map[j - 1] && map[j] && base_cases(map, j , i))
-					return (printf("herehh1\n"), 1);
+					return (1);
 				if(map[j][i])
 					i++;
 			}
@@ -346,6 +342,7 @@ t_map *fill_map(t_map *map , char **cords)
 {
 	map = malloc(sizeof(t_map));
 	map->map = fill_int(cords, map);
+	
 	return (map);
 }
 int getnlcount(char **str)
@@ -413,10 +410,9 @@ char **update_map_pos(char **map)
 int	map_parser(char *file, t_parsing *parsing)
 {
 	char	**map;
-	// map = file + 6;
 	map = ft_split_map(file);
 	if(!map)
-		return 1;
+		return (1);
 	map = update_map_pos(map);
 	if (!map || invalid_sym(map) || check_map_validation(map) == 1)
 		return (printf("Error\n"), 1);
