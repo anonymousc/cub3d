@@ -68,6 +68,22 @@ static int check_for_combo(char **line)
 	}
 	return (free(index), 0);
 }
+int check_dup1(char **line, int index)
+{
+	int i = index - 3;
+	while (i < index)
+	{
+		int j = index - 3;
+		while (j <= i)
+		{
+			if(*line[j] == *line[j + 1])
+				return (printf("yes\n"), 1);
+			j++;
+		}
+		i++;
+	}
+	return (0);
+}
 static int check_textures(char **line)
 {
 	int i;
@@ -89,7 +105,7 @@ static int check_textures(char **line)
 		}
 		i++;
 	}
-	if(counter == 4 && files == 4 && check_for_combo(line) == 0)
+	if(counter == 4 && files == 4 && check_for_combo(line) == 0 && !check_dup1(line, index))
 		return (1);
 	return (0);
 }
