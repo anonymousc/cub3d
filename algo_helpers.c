@@ -12,8 +12,9 @@ double distance(double x1, double y1, double x2, double y2)
     return sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
 }
 
-void process_hor_interception (t_data *data, t_map *map, int i, double nexthortouchX, double nexthortouchY)
+void process_hor_interception (t_data *data, int i, double nexthortouchX, double nexthortouchY)
 {
+    t_map *map = data->parsing->map;
     while (nexthortouchX >= 0 && nexthortouchX <= (map->x_len * TILE_SIZE) && nexthortouchY >= 0 && nexthortouchY <= (map->y_len * TILE_SIZE))
     {
         if (collision(nexthortouchX, (nexthortouchY - data->rays[i].rayfacingUP), map))
@@ -31,8 +32,9 @@ void process_hor_interception (t_data *data, t_map *map, int i, double nexthorto
     }
 }
 
-void process_vert_interception (t_data *data, t_map *map, int i, double nextverttouchX, double nextverttouchY)
+void process_vert_interception (t_data *data, int i, double nextverttouchX, double nextverttouchY)
 {
+    t_map *map = data->parsing->map;
     while (nextverttouchX >= 0 && nextverttouchX <= (map->x_len * TILE_SIZE) && nextverttouchY >= 0 && nextverttouchY <= (map->y_len * TILE_SIZE))
     {
         if (collision((nextverttouchX - data->rays[i].rayfacingLEFT ), nextverttouchY, map))

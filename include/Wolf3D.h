@@ -146,9 +146,9 @@ typedef struct	s_data
 
 double normalize_angle(double angle);
 int horz_interception (t_data *data, int i, t_map *map);
-void process_hor_interception (t_data *data, t_map *map, int i, double nexthortouchX, double nexthortouchY);
+void process_hor_interception (t_data *data, int i, double nexthortouchX, double nexthortouchY);
 int vert_interception (t_data *data, int i, t_map *map);
-void process_vert_interception (t_data *data, t_map *map, int i, double nextverttouchX, double nextverttouchY);
+void process_vert_interception (t_data *data, int i, double nextverttouchX, double nextverttouchY);
 void hor_ver_distances (t_data *data, int i);
 bool collision(double x, double y, t_map *map);
 double distance(double x1, double y1, double x2, double y2);

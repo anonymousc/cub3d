@@ -20,6 +20,6 @@ fclean : clean
 re : fclean all
 
 run : re
-	./Cub3D
+	./Cub3D map/test.cub
 
 .SECONDARY : $(OBJ)

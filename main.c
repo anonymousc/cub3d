@@ -89,6 +89,27 @@ void init_rays_angles(t_data *data, t_rays *first_ray, double ray_angle)
         i++;
     }
 }
+void ft_init_rays(t_data *data, int i)
+{
+    data->rays[i].rayfacingDOWN = data->rays[i].ray_angle > 0 && data->rays[i].ray_angle < PI;
+    data->rays[i].rayfacingUP = !data->rays[i].rayfacingDOWN;
+    data->rays[i].rayfacingRIGHT = data->rays[i].ray_angle < (PI / 2) || data->rays[i].ray_angle > (3 * PI / 2);
+    data->rays[i].rayfacingLEFT = !data->rays[i].rayfacingRIGHT;
+    data->rays[i].horwallhitX = 0;
+    data->rays[i].horwallhitY = 0;
+    data->rays[i].vertwallhitX = 0;
+    data->rays[i].vertwallhitY = 0;
+    data->rays[i].WallHitX = 0;
+    data->rays[i].WallHitY = 0;
+    data->rays[i].foundhorwallhit = false;
+    data->rays[i].foundvertwallhit = false;
+    data->rays[i].washitvertical = false;
+    data->rays[i].HorzDistance = 0;
+    data->rays[i].VertDistance = 0;
+    data->rays[i].distance = 0;
+    data->rays[i].xstep = 0;
+    data->rays[i].ystep = 0;
+}
 
 void init_rays (t_data *data, t_rays *first_ray, double ray_angle)
 {
@@ -98,25 +119,9 @@ void init_rays (t_data *data, t_rays *first_ray, double ray_angle)
     i = -1;
     while (++i < num_of_rays)
     {
-        data->rays[i].rayfacingDOWN = data->rays[i].ray_angle > 0 && data->rays[i].ray_angle < PI;
-        data->rays[i].rayfacingUP = !data->rays[i].rayfacingDOWN;
-        data->rays[i].rayfacingRIGHT = data->rays[i].ray_angle < (PI / 2) || data->rays[i].ray_angle > (3 * PI / 2);
-        data->rays[i].rayfacingLEFT = !data->rays[i].rayfacingRIGHT;
-        data->rays[i].horwallhitX = 0;
-        data->rays[i].horwallhitY = 0;
-        data->rays[i].vertwallhitX = 0;
-        data->rays[i].vertwallhitY = 0;
-        data->rays[i].WallHitX = 0;
-        data->rays[i].WallHitY = 0;
-        data->rays[i].foundhorwallhit = false;
-        data->rays[i].foundvertwallhit = false;
-        data->rays[i].washitvertical = false;
-        data->rays[i].HorzDistance = 0;
-        data->rays[i].VertDistance = 0;
-        data->rays[i].distance = 0;
-        data->rays[i].xstep = 0;
-        data->rays[i].ystep = 0;
+        ft_init_rays(data, i);
     }
+        
 }
 
 void cast_ray(t_data *data, int strip_i)
@@ -149,7 +154,7 @@ void cast_all_rays(t_data *data, t_map *map)
         i++;
     }
 }
-int draw_rays(t_data *data)
+void draw_rays(t_data *data)
 {
     int i = 0;
     while (i < num_of_rays)
@@ -391,6 +396,7 @@ int main (int ac, char **av)
     data->rays = rays;
     fill_bg(data);
     cast_all_rays(data , parser->map);
+
     mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
     mlx_hook(data->win, 02, (1L << 0), keypress, data);
     mlx_hook(data->win, 03, (1L << 1), keyrelease, data);

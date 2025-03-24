@@ -23,7 +23,7 @@ int horz_interception (t_data *data, int i , t_map *map)
     nexthortouchX = xintercept;
     nexthortouchY = yintercept;
     
-    process_hor_interception(data, map, i, nexthortouchX, nexthortouchY);
+    process_hor_interception(data, i, nexthortouchX, nexthortouchY);
     return 0;
 }
 
@@ -50,7 +50,7 @@ int vert_interception (t_data *data, int i, t_map *map)
     nextverttouchX = xintercept;
     nextverttouchY = yintercept;
     
-    process_vert_interception (data, map, i, nextverttouchX, nextverttouchY);
+    process_vert_interception (data, i, nextverttouchX, nextverttouchY);
     
     return 0;
 }
