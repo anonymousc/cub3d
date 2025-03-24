@@ -1,5 +1,5 @@
-NO ./textures/skull_1_.xpm
-SO ./textures/skull_2_.xpm
+         NO ./textures/skull_1_.xpm
+SO ./textures/skull_2_.xpm 
 WE ./textures/skull_3_.xpm
 EA ./textures/skull_4_.xpm
 
