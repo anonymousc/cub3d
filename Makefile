@@ -4,7 +4,7 @@ CC = cc
 
 
 CFLAGS = -I./include/ -O3 -fsanitize=address -g3 #-Wextra -Wall -Werror 
-SRC = main.c intersections_alg.c algo_helpers.c parsing/map_validation/map_validation_core.c  parsing/map_validation/textures_core.c  parsing/map_validation/colors_core.c parsing/file_validation.c parsing/map_validation/map_core.c $(wildcard parsing/parsing_utils/*.c)
+SRC = main.c raycasting/cub_init.c raycasting/rgb.c raycasting/intersections_alg.c raycasting/algo_helpers.c parsing/map_validation/map_validation_core.c  parsing/map_validation/textures_core.c  parsing/map_validation/colors_core.c parsing/file_validation.c parsing/map_validation/map_core.c $(wildcard parsing/parsing_utils/*.c)
 
 OBJ = $(SRC:.c=.o)
 

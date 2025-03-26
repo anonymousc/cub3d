@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_core.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:07:20 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/24 18:25:59 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/26 22:06:33 by aait-bou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ int invalid_sym(char **map)
 		}
 		i++;
 	}
-	if (player >= 2)
+	if (player != 1)
 		return(printf("here1\n"), 1);
 	return (0);
 }
@@ -238,16 +238,17 @@ int	check_map_validation(char **map)
 }
 double deg_into_rad(char c)
 {
-	if(c == 'S')
-		return ((2 * PI));
-	if(c == 'N')
-		return ((3 * PI)/2);
-	if(c == 'E')
-		return (PI);
-	if(c == 'W')
-		return (PI/2);
-	return (0);
+    if(c == 'N')
+        return 0;
+    if(c == 'E')
+        return (PI / 2);
+    if(c == 'S')
+        return PI;
+    if(c == 'W')
+        return (3 * PI / 2);
+    return 0;
 }
+
 char player_id(char **map, int i , int j)
 {
 	return (map[i][j] == 'N' || map[i][j] == 'S' || map[i][j] == 'W' || map[i][j] == 'E');

@@ -19,7 +19,6 @@ char *detailer_color(char *color)
 {
 	while(is_space(*color))
 			color++;
-	printf("%s\n", color);
 	if(ft_strnstr(color , "F ", 2))
 		return ("F");
 	if(ft_strnstr(color , "C ", 2))
