@@ -1,8 +1,24 @@
 #include "Wolf3D.h"
 
-void	clear_window(t_data *data)
+void	free_all(t_data *data)
 {
-	mlx_clear_window(data->mlx, data->win);
+	free(data->player);
+	free_parser(data->parsing);
+	free(data->rays);
+	mlx_destroy_image(data->mlx, data->texture->east_img);
+	mlx_destroy_image(data->mlx, data->texture->west_img);
+	mlx_destroy_image(data->mlx, data->texture->north_img);
+	mlx_destroy_image(data->mlx, data->texture->south_img);
+	free(data->texture->north_texture);
+	free(data->texture->south_texture);
+	free(data->texture->east_texture);
+	free(data->texture->west_texture);
+	free(data->texture);
+	mlx_destroy_image(data->mlx, data->img);
+	mlx_destroy_window(data->mlx, data->win);
+	mlx_destroy_display(data->mlx);
+	free(data->mlx);
+	free(data);
 }
 
 int	update(t_data *data)
@@ -40,9 +56,7 @@ int	keypress(int keycode, void *data)
 	img = (t_data *)data;
 	if (keycode == 65307)
 	{
-		free_parser(img->parsing);
-		mlx_destroy_display(img->mlx);
-		mlx_destroy_window(img->mlx, img->win);
+		free_all(img);
 		exit(0);
 	}
 	else if (keycode == RIGHT)
@@ -79,7 +93,6 @@ int	c(void *data)
 	t_data	*img;
 
 	img = (t_data *)data;
-	mlx_destroy_display(img->mlx);
-	mlx_destroy_window(img->mlx, img->win);
+	free_all(img);
 	exit(0);
 }

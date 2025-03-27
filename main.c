@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:17:40 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 18:05:05 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/27 19:09:18 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	cast_all_rays(t_data *data)
 
 void	f(t_data *data)
 {
-	clear_window(data);
+	mlx_clear_window(data->mlx, data->win);
 	fill_bg(data);
 	cast_all_rays(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
