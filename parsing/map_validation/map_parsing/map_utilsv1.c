@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:28:16 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 03:28:54 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/27 15:49:29 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,17 @@ int	syntax_check(char **map)
 		return (1);
 	return (0);
 }
+
 int	check_map_validation(char **map)
 {
 	char	**map_parser;
 
-	map_parser = replace_spaces_X(map, get_max_line(map));
+	map_parser = replace_spaces_x(map, get_max_line(map));
 	if (!map_parser || syntax_check(map_parser) == 1)
 		return (ft_free(map_parser), 1);
 	return (ft_free(map_parser), 0);
 }
+
 double	deg_into_rad(char c)
 {
 	if (c == 'N')
@@ -48,6 +50,7 @@ char	player_id(char **map, int i, int j)
 	return (map[i][j] == 'N' || map[i][j] == 'S' || map[i][j] == 'W'
 		|| map[i][j] == 'E');
 }
+
 char	**fill_with_1(int max)
 {
 	char	**map;

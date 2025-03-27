@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 02:41:18 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 02:43:57 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/27 15:44:03 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	free_coloring(t_parsing *parsing)
 		free(parsing->coloring);
 	}
 }
+
 char	*detailer_color(char *color)
 {
 	while (is_space(*color))
@@ -57,7 +58,7 @@ int	check_dup(char **color, int indexer)
 
 int	check_if_is_num(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])

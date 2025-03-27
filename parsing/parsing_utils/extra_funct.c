@@ -1,8 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   extra_funct.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/27 15:55:54 by aessadik          #+#    #+#             */
+/*   Updated: 2025/03/27 15:56:00 by aessadik         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Wolf3D.h"
 
-void ft_free(char **line)
+void	ft_free(char **line)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (line && line[i])
 	{
 		free(line[i]);
@@ -11,7 +25,7 @@ void ft_free(char **line)
 	free(line);
 }
 
-int ft_atoi(char *str)
+int	ft_atoi(char *str)
 {
 	long long	res;
 	int			i;
@@ -30,6 +44,7 @@ int ft_atoi(char *str)
 	}
 	return (res);
 }
+
 char	*ft_strnstr(const char *haystack, const char *needle, size_t n)
 {
 	size_t	i;
@@ -56,6 +71,7 @@ char	*ft_strnstr(const char *haystack, const char *needle, size_t n)
 	}
 	return (NULL);
 }
+
 size_t	ft_strlcpy(char *dest, char *src, size_t size)
 {
 	size_t	srcs;
@@ -94,77 +110,3 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 		ft_strlcpy(s1, (s + start), (len + 1));
 	return (s1);
 }
-
-static size_t	ft_countword(char *s)
-{
-	size_t	count;
-
-	count = 0;
-	while (*s)
-	{
-		while (is_space(*s))
-			s++;
-		if (*s)
-			count++;
-		while (!is_space(*s) && *s)
-			s++;
-	}
-	return (count);
-}
-
-static int	is_space_ret(char c)
-{
-	return (c == ' ' || c == '\t' || c == '\n' || c == '\f' || c == '\r');
-}
-
-static char	*get_next_word(char *s, size_t *len)
-{
-	char	*start;
-
-	while (*s && is_space_ret(*s))
-		s++;
-	start = s;
-	*len = 0;
-	while (*s && !is_space_ret(*s))
-	{
-		(*len)++;
-		s++;
-	}
-	return (start);
-}
-
-static char	**split(char *s, int i)
-{
-	size_t	word_count;
-	size_t	len;
-	char	**result;
-	char	*word;
-
-	word_count = ft_countword(s);
-	result = (char **)malloc((word_count + 1) * sizeof(char *));
-	if (!result)
-		return (NULL);
-	while (i < (int)word_count)
-	{
-		word = get_next_word(s, &len);
-		result[i] = ft_substr(word, 0, len);
-		if (!result[i++])
-			return (ft_free(result), NULL);
-		s += (word - s) + len;
-	}
-	result[i] = NULL;
-	return (result);
-}
-
-char	**ft_split(char *s)
-{
-	int		i;
-	char	**lst;
-
-	i = 0;
-	if (!s)
-		return (NULL);
-	lst = split(s, i);
-	return (lst);
-}
-

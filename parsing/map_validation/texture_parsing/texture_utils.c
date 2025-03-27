@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 02:47:47 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 02:54:53 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/27 15:50:03 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ char	*textures(char *line)
 		return ("EA");
 	return (NULL);
 }
+
 int	check_file(char **line, int *files)
 {
 	int	fd;
@@ -54,10 +55,10 @@ int	check_file(char **line, int *files)
 		return (ft_free(line), -1);
 	return (ft_free(line), close(fd), 0);
 }
+
 int	check_for_combo(char **line)
 {
-	int j, *index, i;
-
+	int (j), (*index), (i);
 	j = 0;
 	i = 0;
 	index = malloc(sizeof(int) * 4);

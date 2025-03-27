@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   colors_core.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/27 15:40:35 by aessadik          #+#    #+#             */
+/*   Updated: 2025/03/27 15:42:23 by aessadik         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Wolf3D.h"
 
 int	extra_check(char **color)
 {
-	int(i), (counter);
+	int (i), (counter);
 	i = 0;
 	counter = 0;
 	while (color[i])
@@ -40,7 +52,7 @@ t_color	*extra_norm(t_color *coloring, char **color)
 {
 	char	**data;
 
-	int(i), (j);
+	int (i), (j);
 	i = 0;
 	j = 0;
 	while (color[i])
@@ -59,7 +71,7 @@ t_color	*extra_norm(t_color *coloring, char **color)
 
 t_color	*after_parse(char **color, t_color *coloring)
 {
-	int(i), (j);
+	int (i), (j);
 	i = 0;
 	j = 0;
 	coloring = malloc(sizeof(t_color) * 2);

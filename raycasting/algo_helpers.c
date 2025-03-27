@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   algo_helpers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:00:42 by aait-bou          #+#    #+#             */
-/*   Updated: 2025/03/26 21:25:44 by aait-bou         ###   ########.fr       */
+/*   Updated: 2025/03/27 16:04:33 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,52 +42,52 @@ bool	collision(double x, double y, t_map *map)
 	return (0);
 }
 
-void	process_hor_interception(t_data *data, int i, double nexthortouchX,
-		double nexthortouchY)
+void	process_hor_interception(t_data *data, int i, double nexthortouchx,
+		double nexthortouchy)
 {
 	t_map	*map;
 
 	map = data->parsing->map;
-	while (nexthortouchX >= 0 && nexthortouchX <= (map->x_len * TILE_SIZE)
-		&& nexthortouchY >= 0 && nexthortouchY <= (map->y_len * TILE_SIZE))
+	while (nexthortouchx >= 0 && nexthortouchx <= (map->x_len * TILE_SIZE)
+		&& nexthortouchy >= 0 && nexthortouchy <= (map->y_len * TILE_SIZE))
 	{
-		if (collision(nexthortouchX, (nexthortouchY
-					- data->rays[i].rayfacingUP), map))
+		if (collision(nexthortouchx, (nexthortouchy
+					- data->rays[i].rayfacingup), map))
 		{
 			data->rays[i].foundhorwallhit = true;
-			data->rays[i].horwallhitX = nexthortouchX;
-			data->rays[i].horwallhitY = nexthortouchY;
+			data->rays[i].horwallhitx = nexthortouchx;
+			data->rays[i].horwallhity = nexthortouchy;
 			break ;
 		}
 		else
 		{
-			nexthortouchX += data->rays[i].xstep;
-			nexthortouchY += data->rays[i].ystep;
+			nexthortouchx += data->rays[i].xstep;
+			nexthortouchy += data->rays[i].ystep;
 		}
 	}
 }
 
-void	process_vert_interception(t_data *data, int i, double nextverttouchX,
-		double nextverttouchY)
+void	process_vert_interception(t_data *data, int i, double nextverttouchx,
+		double nextverttouchy)
 {
 	t_map	*map;
 
 	map = data->parsing->map;
-	while (nextverttouchX >= 0 && nextverttouchX <= (map->x_len * TILE_SIZE)
-		&& nextverttouchY >= 0 && nextverttouchY <= (map->y_len * TILE_SIZE))
+	while (nextverttouchx >= 0 && nextverttouchx <= (map->x_len * TILE_SIZE)
+		&& nextverttouchy >= 0 && nextverttouchy <= (map->y_len * TILE_SIZE))
 	{
-		if (collision((nextverttouchX - data->rays[i].rayfacingLEFT),
-				nextverttouchY, map))
+		if (collision((nextverttouchx - data->rays[i].rayfacingleft),
+				nextverttouchy, map))
 		{
 			data->rays[i].foundvertwallhit = true;
-			data->rays[i].vertwallhitX = nextverttouchX;
-			data->rays[i].vertwallhitY = nextverttouchY;
+			data->rays[i].vertwallhitx = nextverttouchx;
+			data->rays[i].vertwallhity = nextverttouchy;
 			break ;
 		}
 		else
 		{
-			nextverttouchX += data->rays[i].xstep;
-			nextverttouchY += data->rays[i].ystep;
+			nextverttouchx += data->rays[i].xstep;
+			nextverttouchy += data->rays[i].ystep;
 		}
 	}
 }

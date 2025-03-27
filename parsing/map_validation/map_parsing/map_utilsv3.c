@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:21:06 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 03:22:31 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/27 15:48:47 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@ int	base_cases(char **map, int j, int i)
 {
 	return (wall_check(map, i, j) || player_check(map, i, j));
 }
+
 int	edge_cases(char **map)
 {
-	int(i), (j);
+	int (i), (j);
 	if (map[0] && map[1])
 	{
 		i = 0;
@@ -41,23 +42,25 @@ int	edge_cases(char **map)
 		return (1);
 	return (0);
 }
+
 int	player_position(char c)
 {
 	return (c == 'N' || c == 'W' || c == 'S' || c == 'E');
 }
+
 int	map_components(char c)
 {
 	return (c == '1' || c == '0' || player_position(c) || is_space(c));
 }
+
 int	invalid_sym(char **map)
 {
-	int(i), (player);
-
+	int (i), (j), (player);
 	i = 0;
 	player = 0;
 	while (map[i])
 	{
-		int j = 0;
+		j = 0;
 		while (map[i][j])
 		{
 			if (player_position(map[i][j]))

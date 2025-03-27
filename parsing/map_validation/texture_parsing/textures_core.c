@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   textures_core.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/27 15:50:28 by aessadik          #+#    #+#             */
+/*   Updated: 2025/03/27 15:52:23 by aessadik         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Wolf3D.h"
 
 int	check_dup_tex(char **line, int index)
@@ -21,6 +33,7 @@ int	check_dup_tex(char **line, int index)
 	}
 	return (0);
 }
+
 static int	check_textures(char **line)
 {
 	int	i;
@@ -53,7 +66,7 @@ t_tex	*reduce(char **file_content, t_tex *texture)
 {
 	char	**data;
 
-	int(i), (j);
+	int (i), (j);
 	i = 0;
 	j = 0;
 	while (file_content[i])
@@ -69,9 +82,10 @@ t_tex	*reduce(char **file_content, t_tex *texture)
 	}
 	return (texture);
 }
+
 static void	after_check(t_parsing *parsing, char **file_content)
 {
-	int(i), (j);
+	int (i), (j);
 	parsing->textures = malloc(sizeof(t_tex) * TEXTURE_SIZE + 1);
 	i = 0;
 	j = 0;
@@ -79,7 +93,8 @@ static void	after_check(t_parsing *parsing, char **file_content)
 	{
 		if (textures(file_content[i]))
 		{
-			parsing->textures[j].direction = ft_strdup(textures(file_content[i]));
+			parsing->textures[j].direction = \
+				ft_strdup(textures(file_content[i]));
 			j++;
 		}
 		i++;
@@ -89,7 +104,8 @@ static void	after_check(t_parsing *parsing, char **file_content)
 
 t_parsing	*fill_texture(char **file_content, char *tmp)
 {
-	t_parsing *parsing;
+	t_parsing	*parsing;
+
 	if (!file_content)
 		return (printf("File is empty !!\n"), NULL);
 	if (check_textures(file_content) == 0)

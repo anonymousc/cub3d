@@ -96,10 +96,9 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	result = read_til_newline(fd, result);
-	if(!result)
+	if (!result)
 		return (NULL);
 	line = process_left(result);
 	result = process_right(result);
-	
 	return (line);
 }

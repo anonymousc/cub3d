@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:46:00 by aait-bou          #+#    #+#             */
-/*   Updated: 2025/03/27 03:09:22 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/27 17:53:06 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,27 @@
 
 void	ft_init_rays(t_data *data, int i)
 {
-	data->rays[i].rayfacingDOWN = data->rays[i].ray_angle > 0
+	data->rays[i].rayfacingdown = data->rays[i].ray_angle > 0
 		&& data->rays[i].ray_angle < PI;
-	data->rays[i].rayfacingUP = !data->rays[i].rayfacingDOWN;
-	data->rays[i].rayfacingRIGHT = data->rays[i].ray_angle < (PI / 2)
+	data->rays[i].rayfacingup = !data->rays[i].rayfacingdown;
+	data->rays[i].rayfacingright = data->rays[i].ray_angle < (PI / 2)
 		|| data->rays[i].ray_angle > (3 * PI / 2);
-	data->rays[i].rayfacingLEFT = !data->rays[i].rayfacingRIGHT;
-	data->rays[i].horwallhitX = 0;
-	data->rays[i].horwallhitY = 0;
-	data->rays[i].vertwallhitX = 0;
-	data->rays[i].vertwallhitY = 0;
-	data->rays[i].WallHitX = 0;
-	data->rays[i].WallHitY = 0;
+	data->rays[i].rayfacingleft = !data->rays[i].rayfacingright;
+	data->rays[i].horwallhitx = 0;
+	data->rays[i].horwallhity = 0;
+	data->rays[i].vertwallhitx = 0;
+	data->rays[i].vertwallhity = 0;
+	data->rays[i].wallhitx = 0;
+	data->rays[i].wallhity = 0;
 	data->rays[i].foundhorwallhit = false;
 	data->rays[i].foundvertwallhit = false;
 	data->rays[i].washitvertical = false;
-	data->rays[i].HorzDistance = 0;
-	data->rays[i].VertDistance = 0;
+	data->rays[i].horzdistance = 0;
+	data->rays[i].vertdistance = 0;
 	data->rays[i].distance = 0;
 	data->rays[i].xstep = 0;
 	data->rays[i].ystep = 0;
+	data->rays[i].wallstripheight = 0;
 }
 
 void	init_rays_angles(t_data *data, t_rays *first_ray, double ray_angle)
@@ -42,7 +43,7 @@ void	init_rays_angles(t_data *data, t_rays *first_ray, double ray_angle)
 	double	angle_increment;
 
 	first_ray->ray_angle = normalize_angle(ray_angle);
-	angle_increment = FOV / NUM_OF_RAYS;
+	angle_increment = (FOV * (PI / 180)) / NUM_OF_RAYS;
 	i = 1;
 	while (i < NUM_OF_RAYS)
 	{
@@ -56,8 +57,8 @@ void	init_rays(t_data *data, t_rays *first_ray, double ray_angle)
 {
 	int	i;
 
-	init_rays_angles(data, first_ray, ray_angle);
 	i = -1;
+	init_rays_angles(data, first_ray, ray_angle);
 	while (++i < NUM_OF_RAYS)
 	{
 		ft_init_rays(data, i);
@@ -80,18 +81,18 @@ void	init_player(t_player *player, t_map *map)
 t_data	*general_init(int ac, char **av)
 {
 	t_parsing	*parser;
-	(void)ac, (void)av;
 	t_data		*data;
 	t_player	*player;
 	t_rays		*rays;
 	t_texture	*textures;
 
+	(void)ac, (void)av;
 	parser = map_validation(file_validation(ac, av));
 	data = malloc(sizeof(t_data));
 	player = malloc(sizeof(t_player));
 	rays = malloc(sizeof(t_rays) * (WINDOW_WIDTH / STRIP_WIDTH));
 	textures = malloc(sizeof(t_texture));
-    data->parsing = parser;
+	data->parsing = parser;
 	data->player = player;
 	data->rays = rays;
 	data->texture = textures;

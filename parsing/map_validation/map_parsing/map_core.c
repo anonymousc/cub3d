@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:07:20 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 03:27:22 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/27 15:45:06 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	getnlcount1(char **str)
 {
-	int(i), (count);
+	int (i), (count);
 	count = 0;
 	i = 0;
 	while (str[i])
@@ -25,12 +25,13 @@ int	getnlcount1(char **str)
 	}
 	return (count);
 }
+
 char	**remove_newlines(char **map, char **tmp)
 {
 	char	**map1;
 
 	map1 = malloc(sizeof(char *) * (getnlcount1(map) + 1));
-	int(i), (j);
+	int (i), (j);
 	j = 0;
 	i = 0;
 	while (map[i])
@@ -46,6 +47,7 @@ char	**remove_newlines(char **map, char **tmp)
 	ft_free(tmp);
 	return (map1);
 }
+
 char	**update_map_pos(char **map)
 {
 	int		i;
@@ -66,6 +68,7 @@ char	**update_map_pos(char **map)
 	tmp = map + max + getnlcount(map + max);
 	return (remove_newlines(tmp, map));
 }
+
 t_map	*fill_map(t_map *map, char **cords)
 {
 	char	**data;
@@ -75,6 +78,7 @@ t_map	*fill_map(t_map *map, char **cords)
 	map->map = convert_map(data, get_max_line(cords), map->map);
 	return (map);
 }
+
 int	map_parser(char *file, t_parsing *parsing)
 {
 	char	**map;

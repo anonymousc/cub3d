@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:31:21 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 03:31:26 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/27 15:55:48 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,15 @@ char	*ft_strjoin(char *result, char *buffer)
 	free(result);
 	return (line);
 }
+
 char	*ft_strchr(char *s, int c)
 {
 	int	i;
 	int	len;
 
 	i = 0;
-	if(!s)
-		return NULL;
+	if (!s)
+		return (NULL);
 	len = ft_strlen(s);
 	while (i <= len)
 	{
@@ -57,7 +58,8 @@ char	*ft_strchr(char *s, int c)
 	}
 	return (NULL);
 }
-int	ft_strcmp(char *s1 ,char *s2)
+
+int	ft_strcmp(char *s1, char *s2)
 {
 	int	i;
 
@@ -68,7 +70,8 @@ int	ft_strcmp(char *s1 ,char *s2)
 		i++;
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
-int	ft_strncmp(char *s1 ,char *s2, int n)
+
+int	ft_strncmp(char *s1, char *s2, int n)
 {
 	int	i;
 
@@ -79,6 +82,7 @@ int	ft_strncmp(char *s1 ,char *s2, int n)
 		i++;
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
+
 char	*ft_strjoin_map(char *s, char *s1)
 {
 	char	*p;

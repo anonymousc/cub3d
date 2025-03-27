@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 02:44:31 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 02:45:13 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/27 15:43:09 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	check_if_valid_number(char **str)
 {
-	int(i), (counter);
+	int (i), (counter);
 	i = 0;
 	counter = 0;
 	while (str[i])
@@ -28,9 +28,10 @@ int	check_if_valid_number(char **str)
 		return (1);
 	return (0);
 }
+
 int	nearby(char **line)
 {
-	int(j), (*index), (i);
+	int (j), (*index), (i);
 	j = 0;
 	i = 0;
 	index = malloc(sizeof(int) * 2);
@@ -53,6 +54,7 @@ int	nearby(char **line)
 	}
 	return (free(index), 0);
 }
+
 int	getqomalen(char *str)
 {
 	int	counter;
@@ -84,8 +86,7 @@ int	double_check(char *str)
 
 int	final_check(char **color)
 {
-	int(i), (indexer);
-
+	int (i), (indexer);
 	i = 0;
 	indexer = 0;
 	while (color[i])

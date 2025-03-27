@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   extra_libc.c                                       :+:      :+:    :+:   */
+/*   ft_split_file.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/27 03:30:37 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 03:31:32 by aessadik         ###   ########.fr       */
+/*   Created: 2025/03/27 18:18:17 by aessadik          #+#    #+#             */
+/*   Updated: 2025/03/27 18:18:58 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,30 @@ static size_t	ft_countword(char *s)
 	count = 0;
 	while (*s)
 	{
-		while (*s == ',')
+		while (*s == '\n')
 			s++;
 		if (*s)
 			count++;
-		while (*s != ',' && *s)
+		while (*s != '\n' && *s)
 			s++;
 	}
 	return (count);
+}
+
+static int	is_space_ret(char c)
+{
+	return (c == '\n');
 }
 
 static char	*get_next_word(char *s, size_t *len)
 {
 	char	*start;
 
-	while (*s && *s == ',')
+	while (*s && is_space_ret(*s))
 		s++;
 	start = s;
 	*len = 0;
-	while (*s && *s != ',')
+	while (*s && !is_space_ret(*s))
 	{
 		(*len)++;
 		s++;
@@ -68,7 +73,7 @@ static char	**split(char *s, int i)
 	return (result);
 }
 
-char	**ft_split_color(char *s)
+char	**ft_split_file(char *s)
 {
 	int		i;
 	char	**lst;
@@ -78,9 +83,4 @@ char	**ft_split_color(char *s)
 		return (NULL);
 	lst = split(s, i);
 	return (lst);
-}
-
-int	is_space(char c)
-{
-	return ((c >= 9 && c <= 13) || c == 32);
 }

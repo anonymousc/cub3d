@@ -1,0 +1,85 @@
+#include "Wolf3D.h"
+
+void	clear_window(t_data *data)
+{
+	mlx_clear_window(data->mlx, data->win);
+}
+
+int	update(t_data *data)
+{
+	t_map	*map;
+
+	double (next_px), (next_py);
+	int (movestep), (sidestep);
+	next_px = data->player->px;
+	next_py = data->player->py;
+	map = data->parsing->map;
+	data->player->pangle += normalize_angle(data->player->turn_direction
+			* data->player->rotation_speed);
+	movestep = data->player->walk_direction * data->player->move_speed;
+	sidestep = data->player->sidewalk * data->player->move_speed;
+	next_px += cos(data->player->pangle) * movestep;
+	next_py += sin(data->player->pangle) * movestep;
+	if (data->player->sidewalk == 1 || data->player->sidewalk == -1)
+	{
+		next_px -= sin(data->player->pangle) * sidestep;
+		next_py += cos(data->player->pangle) * sidestep;
+	}
+	if (!collision(next_px, data->player->py, map))
+		data->player->px = next_px;
+	if (!collision(data->player->px, next_py, map))
+		data->player->py = next_py;
+	f(data);
+	return (0);
+}
+
+int	keypress(int keycode, void *data)
+{
+	t_data	*img;
+
+	img = (t_data *)data;
+	if (keycode == 65307)
+	{
+		free_parser(img->parsing);
+		mlx_destroy_display(img->mlx);
+		mlx_destroy_window(img->mlx, img->win);
+		exit(0);
+	}
+	else if (keycode == RIGHT)
+		img->player->sidewalk = 1;
+	else if (keycode == LEFT)
+		img->player->sidewalk = -1;
+	if (keycode == UP)
+		img->player->walk_direction = 1;
+	else if (keycode == DOWN)
+		img->player->walk_direction = -1;
+	if (keycode == TURN_RIGHT)
+		img->player->turn_direction = 1;
+	else if (keycode == TURN_LEFT)
+		img->player->turn_direction = -1;
+	return (0);
+}
+
+int	keyrelease(int keycode, void *data)
+{
+	t_data	*img;
+
+	img = (t_data *)data;
+	if (keycode == RIGHT || keycode == LEFT)
+		img->player->sidewalk = 0;
+	if (keycode == UP || keycode == DOWN)
+		img->player->walk_direction = 0;
+	if (keycode == TURN_RIGHT || keycode == TURN_LEFT)
+		img->player->turn_direction = 0;
+	return (0);
+}
+
+int	c(void *data)
+{
+	t_data	*img;
+
+	img = (t_data *)data;
+	mlx_destroy_display(img->mlx);
+	mlx_destroy_window(img->mlx, img->win);
+	exit(0);
+}
