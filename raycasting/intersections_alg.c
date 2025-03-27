@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   intersections_alg.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:04:52 by aait-bou          #+#    #+#             */
-/*   Updated: 2025/03/26 18:15:09 by aait-bou         ###   ########.fr       */
+/*   Updated: 2025/03/27 03:04:01 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 int	horz_interception(t_data *data, int i, t_map *map)
 {
 	double (nexthortouchY), (nexthortouchX), (yintercept), (xintercept);
+	(void)map;
+
 	yintercept = (int)(data->player->py / TILE_SIZE) * TILE_SIZE;
 	if (data->rays[i].rayfacingDOWN)
 		yintercept += TILE_SIZE;
@@ -36,6 +38,7 @@ int	horz_interception(t_data *data, int i, t_map *map)
 
 int	vert_interception(t_data *data, int i, t_map *map)
 {
+	(void)map;
 	double (nextverttouchX), (nextverttouchY), (xintercept), (yintercept);
 	xintercept = (int)(data->player->px / TILE_SIZE) * TILE_SIZE;
 	if (data->rays[i].rayfacingRIGHT)

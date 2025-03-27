@@ -57,6 +57,8 @@
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
-    "wolf3d.h": "c"
+    "wolf3d.h": "c",
+    "stdatomic.h": "c",
+    "mlx.h": "c"
   }
 }

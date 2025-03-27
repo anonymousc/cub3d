@@ -112,7 +112,6 @@ void render3DWalls(t_data *data, int i)
     if (endy > WINDOW_HEIGHT) 
         endy = WINDOW_HEIGHT;
 
-    unsigned int wall_color;
     draw_strip(data, i, starty, endy, wallStripHeight);
 }
 

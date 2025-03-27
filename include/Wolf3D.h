@@ -169,17 +169,57 @@ int	get_argb(char *c, t_data *data);
 //// PARSING /////
 int         file_validation(int arg,char **str);
 t_parsing *map_validation(int fd);
-char *detailer_color(char *color);
-char	**ft_split_color(char *s);
 void free_parser(t_parsing *parsing);
 char	**ft_split_file(char *s);
 
-t_parsing   *fill_texture(char **file_content,char *tmp);
-int         fill_coloring(char **line, t_parsing *parsing);
+/// COLOR PARSER ////
+char	**ft_split_color(char *s);
+char *detailer_color(char *color);
+int check_if_is_num(char *str);
+int check_dup(char **color, int indexer);
+int check_if_valid_number(char **str);
+int nearby(char **line);
+int getqomalen(char *str);
+int double_check(char *str);
+int final_check(char **color);
 void        free_coloring(t_parsing *parsing);
+int         fill_coloring(char **line, t_parsing *parsing);
+/////////////////////
+
+/// MAP PARSER /////
+char	**ft_split_map(char *s);
+int get_r(char **map);
+int	get_max_line(char **map);
+int player_check(char **map , int i , int j);
+int wall_check(char **map, int i , int j);
+int check_edge(char **map, int i , int j, char c);
+int check_corner(char **map, int i, int j, char c);
+char	**replace_spaces_X(char **map, int maxlen);
+int invalid_sym(char **map);
+int map_components(char c);
+int player_position(char c);
+int edge_cases(char **map);
+int base_cases(char **map, int j , int i);
+int	syntax_check(char **map);
+double deg_into_rad(char c);
+char player_id(char **map, int i , int j);
+char **fill_with_1(int max);
+char **resize(char **map, int max);
+int  **convert_map(char **map, int len ,int **data);
+void fill_int(char **map, t_map **map1, char **data);
+int getnlcount(char **str);
+////////////////////
+
+/// TEXTURES PARSER ///
+int check_file(char **line, int *files);
+char *textures(char *line);
+int check_for_combo(char **line);
+t_parsing   *fill_texture(char **file_content,char *tmp);
 void        free_textures(t_parsing *parsing);
 int get_len(char **s);
 char *textures(char *line);
+/////////////////////
+
 /// APIS /////////
 int     ft_strncmp(char *s1 ,char *s2, int n);
 int     ft_strcmp(char *s1 ,char *s2);

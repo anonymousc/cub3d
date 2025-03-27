@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rgb.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:20:11 by aait-bou          #+#    #+#             */
-/*   Updated: 2025/03/26 21:20:59 by aait-bou         ###   ########.fr       */
+/*   Updated: 2025/03/27 03:03:05 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ unsigned int	get_pixel_color(t_texture *texture, void *addr, int x, int y)
 	color = 0;
 	x = x % 64;
 	dst = addr + (y * texture->line_length + x * (texture->bits_per_pixel / 8));
-	color = (unsigned int)(*(dst + 2) & 0xff) << 16 | (unsigned int)(*(dst
-				+ 1) & 0xff) << 8 | (unsigned int)(*dst) & 0xff;
+	color = (unsigned int)(*(dst + 2) & 0xff) << 16 | ((unsigned int)(*(dst
+				+ 1) & 0xff)) << 8 | ((unsigned int)(*dst) & 0xff);
 	return (color);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub_init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:46:00 by aait-bou          #+#    #+#             */
-/*   Updated: 2025/03/26 21:23:49 by aait-bou         ###   ########.fr       */
+/*   Updated: 2025/03/27 03:09:22 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void	init_player(t_player *player, t_map *map)
 t_data	*general_init(int ac, char **av)
 {
 	t_parsing	*parser;
+	(void)ac, (void)av;
 	t_data		*data;
 	t_player	*player;
 	t_rays		*rays;
@@ -90,7 +91,7 @@ t_data	*general_init(int ac, char **av)
 	player = malloc(sizeof(t_player));
 	rays = malloc(sizeof(t_rays) * (WINDOW_WIDTH / STRIP_WIDTH));
 	textures = malloc(sizeof(t_texture));
-	data->parsing = parser;
+    data->parsing = parser;
 	data->player = player;
 	data->rays = rays;
 	data->texture = textures;
