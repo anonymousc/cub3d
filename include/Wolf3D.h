@@ -37,9 +37,10 @@
 #define TILE_SIZE 64
 #define PI 3.14159265358979323846
 #define TILE_SIZE 64
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
+#define WINDOW_WIDTH 1600
+#define WINDOW_HEIGHT 900
 #define FOV  60 * (PI / 180)
+#define NUM_OF_RAYS WINDOW_WIDTH
 #define STRIP_WIDTH 1
 #define MINIMAP_SCALE 0.25
 #define MINIMAP_TILE_SIZE (TILE_SIZE * MINIMAP_SCALE)
@@ -146,15 +147,24 @@ typedef struct	s_data
 
 double normalize_angle(double angle);
 int horz_interception (t_data *data, int i, t_map *map);
-void process_hor_interception (t_data *data, t_map *map, int i, double nexthortouchX, double nexthortouchY);
+void process_hor_interception (t_data *data, int i, double nexthortouchX, double nexthortouchY);
 int vert_interception (t_data *data, int i, t_map *map);
-void process_vert_interception (t_data *data, t_map *map, int i, double nextverttouchX, double nextverttouchY);
+void process_vert_interception (t_data *data, int i, double nextverttouchX, double nextverttouchY);
 void hor_ver_distances (t_data *data, int i);
+void render3DWalls(t_data *data, int i);
 bool collision(double x, double y, t_map *map);
 double distance(double x1, double y1, double x2, double y2);
 
+//////INIT////////
+void init_rays (t_data *data, t_rays *first_ray, double ray_angle);
+void init_player (t_player *player, t_map *map);
+t_data *general_init(int ac, char **av);
 
-
+//////RGBs//////
+unsigned int	get_pixel_color(t_texture *texture, void *addr, int x, int y);
+void	my_mlx_pixel_put(t_data *data, double x, double y, int color);
+int	create_rgb(int red, int green, int blue);
+int	get_argb(char *c, t_data *data);
 
 //// PARSING /////
 int         file_validation(int arg,char **str);

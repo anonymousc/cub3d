@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:07:20 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 01:16:34 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/27 01:26:14 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,16 +245,17 @@ int	check_map_validation(char **map)
 }
 double deg_into_rad(char c)
 {
-	if(c == 'S')
-		return ((2 * PI));
-	if(c == 'N')
-		return ((3 * PI)/2);
-	if(c == 'E')
-		return (PI);
-	if(c == 'W')
-		return (PI/2);
-	return (0);
+    if(c == 'N')
+        return 0;
+    if(c == 'E')
+        return (PI / 2);
+    if(c == 'S')
+        return PI;
+    if(c == 'W')
+        return (3 * PI / 2);
+    return 0;
 }
+
 char player_id(char **map, int i , int j)
 {
 	return (map[i][j] == 'N' || map[i][j] == 'S' || map[i][j] == 'W' || map[i][j] == 'E');
