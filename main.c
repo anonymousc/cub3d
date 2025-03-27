@@ -275,6 +275,7 @@ int keypress (int keycode, void *data)
     
     if (keycode == 65307)
     {
+        free_parser(img->parsing);
         mlx_destroy_display(img->mlx);
         mlx_destroy_window(img->mlx, img->win);
         exit (0);
@@ -360,6 +361,24 @@ char *get_texture(t_data *data , char *direction)
         i++;
     }
     return (NULL);
+}
+void free_map(t_parsing *parsing)
+{
+    int i = 0;
+	while (i < parsing->map->y_len)
+	{
+		free(parsing->map->map[i]);
+		i++;
+	}
+    free(parsing->map->map);
+    free(parsing->map);
+}
+void free_parser(t_parsing *parsing)
+{
+    free_textures(parsing);
+    free_coloring(parsing);
+    free_map(parsing);
+    free(parsing);
 }
 int main (int ac, char **av)
 {

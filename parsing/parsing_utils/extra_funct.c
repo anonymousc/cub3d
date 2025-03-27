@@ -95,50 +95,68 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	return (s1);
 }
 
-static size_t	ft_countword(char *s, char c)
+static size_t	ft_countword(char *s)
 {
 	size_t	count;
 
 	count = 0;
 	while (*s)
 	{
-		while (*s == c)
+		while (is_space(*s))
 			s++;
 		if (*s)
 			count++;
-		while (*s != c && *s)
+		while (!is_space(*s) && *s)
 			s++;
 	}
 	return (count);
 }
 
-static char	**split(char *s, char c, int i)
+static int	is_space_ret(char c)
 {
-	size_t	word_len;
-	char	**lst;
-
-	lst = (char **)malloc((ft_countword(s, c) + 1) * sizeof(char *));
-	if (!lst)
-		return (NULL);
-	while (*s)
-	{
-		while (*s == c && *s)
-			s++;
-		if (*s)
-		{
-			if (!ft_strchr(s, c))
-				word_len = ft_strlen(s);
-			else
-				word_len = ft_strchr(s, c) - s;
-			lst[i] = ft_substr(s, 0, word_len);
-			i++;
-			s += word_len;
-		}
-	}
-	return (lst[i] = NULL, lst);
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\f' || c == '\r');
 }
 
-char	**ft_split(char *s, char c)
+static char	*get_next_word(char *s, size_t *len)
+{
+	char	*start;
+
+	while (*s && is_space_ret(*s))
+		s++;
+	start = s;
+	*len = 0;
+	while (*s && !is_space_ret(*s))
+	{
+		(*len)++;
+		s++;
+	}
+	return (start);
+}
+
+static char	**split(char *s, int i)
+{
+	size_t	word_count;
+	size_t	len;
+	char	**result;
+	char	*word;
+
+	word_count = ft_countword(s);
+	result = (char **)malloc((word_count + 1) * sizeof(char *));
+	if (!result)
+		return (NULL);
+	while (i < (int)word_count)
+	{
+		word = get_next_word(s, &len);
+		result[i] = ft_substr(word, 0, len);
+		if (!result[i++])
+			return (ft_free(result), NULL);
+		s += (word - s) + len;
+	}
+	result[i] = NULL;
+	return (result);
+}
+
+char	**ft_split(char *s)
 {
 	int		i;
 	char	**lst;
@@ -146,6 +164,7 @@ char	**ft_split(char *s, char c)
 	i = 0;
 	if (!s)
 		return (NULL);
-	lst = split(s, c, i);
+	lst = split(s, i);
 	return (lst);
 }
+

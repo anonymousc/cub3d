@@ -19,7 +19,6 @@ char *detailer_color(char *color)
 {
 	while(is_space(*color))
 			color++;
-	printf("%s\n", color);
 	if(ft_strnstr(color , "F ", 2))
 		return ("F");
 	if(ft_strnstr(color , "C ", 2))
@@ -114,7 +113,7 @@ int double_check(char *str)
 	str += 1;
 	if(!getqomalen(str))
 		return (1);
-	color_detailer = ft_split(str, ',');
+	color_detailer = ft_split_color(str);
 	if(!color_detailer || check_if_valid_number(color_detailer))
 		return (ft_free(color_detailer), 1);
 	return (ft_free(color_detailer), 0);
@@ -198,10 +197,10 @@ int fill_coloring(char **color, t_parsing *parsing)
 	{
 		if(detailer_color(color[i]))
 		{
-			data = ft_split(color[i], ' ');
+			data = ft_split(color[i]);
 			if(!data)
 				return (free_coloring(parsing) ,ft_free(color), 1);
-			parsing->coloring[j].rgb = fill_rgb(ft_split(data[1] , ','));
+			parsing->coloring[j].rgb = fill_rgb(ft_split_color(data[1]));
 			ft_free(data);
 			j++;
 		}	

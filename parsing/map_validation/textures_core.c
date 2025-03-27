@@ -10,7 +10,6 @@ void free_textures(t_parsing *parsing)
 		i++;
 	}
 	free(parsing->textures);
-	free(parsing);
 }
 char *textures(char *line)
 {
@@ -35,11 +34,10 @@ static int check_file(char **line, int *files)
 	if(line[1])
 	{
 		fd = open(line[1], O_RDWR, 0666);
-		j++;
+		(*files)++;
 	}
 	if(fd == -1)
 		return (ft_free(line),-1);
-	*files = j;
 	return (ft_free(line), close(fd), 0);
 }
 static int check_for_combo(char **line)
@@ -73,11 +71,13 @@ int check_dup1(char **line, int index)
 	int i = index - 3;
 	while (i < index)
 	{
+		while(is_space(*line[i]))
+			line++;
 		int j = index - 3;
 		while (j <= i)
 		{
 			if(*line[j] == *line[j + 1])
-				return (printf("yes\n"), 1);
+				return (1);
 			j++;
 		}
 		i++;
@@ -99,7 +99,7 @@ static int check_textures(char **line)
 		if(textures(line[i]))
 		{
 			index = i;
-			if(check_file(ft_split(line[i], ' '), &files) == -1 || i >= 6)
+			if(check_file(ft_split(line[i]), &files) == -1 || i >= 6)
 				return (0);
 			counter++;
 		}
@@ -133,7 +133,7 @@ static void after_check(t_parsing *parsing , char **file_content)
 		
 		if(textures(file_content[i]))
 		{
-			data = ft_split(file_content[i], ' ');
+			data = ft_split(file_content[i]);
 			parsing->textures[j].filename = ft_strdup(data[1]);
 			ft_free(data);
 			j++;
@@ -142,13 +142,13 @@ static void after_check(t_parsing *parsing , char **file_content)
 	}
 }
 
-t_parsing *fill_texture(char **file_content)
+t_parsing *fill_texture(char **file_content , char *tmp)
 {
 	t_parsing *parsing;
 	if(!file_content)
 		return(printf("File is empty !!\n"), NULL);
 	if(check_textures(file_content) == 0)
-		return (printf("Error\n"), exit(1), NULL);
+		return (ft_free(file_content),free(tmp), printf("Error\n"), exit(1), NULL);
 	parsing = malloc(sizeof(t_parsing));
 	after_check(parsing , file_content);
 	return (parsing); 

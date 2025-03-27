@@ -6,12 +6,13 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:07:20 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/24 18:25:59 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/27 01:16:34 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Wolf3D.h"
 
+int get_r(char **map);
 static size_t	ft_countword(char *p)
 {
 	size_t		counter;
@@ -109,12 +110,15 @@ char	**replace_spaces_X(char **map, int maxlen)
 	int	i;
 
 	i = 0;
-	while (map[i])
+	char **to_rem;
+	to_rem = (char **)malloc(sizeof(char *) * (get_max_line(map) + 1));
+	while (i < get_max_line(map) - 1 && map[i])
 	{
-		map[i] = ft_resize(map[i], maxlen);
+		to_rem[i] = ft_resize(map[i], maxlen);
 		i++;
 	}
-	return (map);
+	to_rem[i] = NULL;
+	return (to_rem);
 }
 int check_corner(char **map, int i, int j, char c)
 {
@@ -166,10 +170,11 @@ int base_cases(char **map, int j , int i)
 }
 int edge_cases(char **map)
 {
+	int (i),(j);
 	if(map[0] && map[1])
 	{
-		int i = 0;
-		int j = 2;
+		i = 0;
+		j = 2;
 		while (map[j])
 		{
 			i = 0;
@@ -199,8 +204,10 @@ int map_components(char c)
 }
 int invalid_sym(char **map)
 {
-	int i = 0;
-	int player = 0;
+	int (i),(player);
+
+	i = 0;
+	player = 0;
 	while(map[i])
 	{
 		int j = 0;
@@ -209,13 +216,13 @@ int invalid_sym(char **map)
 			if(player_position(map[i][j]))
 				player++;
 			if(!map_components(map[i][j]))
-				return (printf("here1\n"), 1);
+				return (1);
 			j++;
 		}
 		i++;
 	}
-	if (player >= 2)
-		return(printf("here1\n"), 1);
+	if (player != 1)
+		return(1);
 	return (0);
 }
 int	syntax_check(char **map)
@@ -232,9 +239,9 @@ int	check_map_validation(char **map)
 	char **map_parser;
 
 	map_parser = replace_spaces_X(map, get_max_line(map));
-	if (syntax_check(map_parser) == 1)
-		return ( 1);
-	return (0);
+	if (!map_parser || syntax_check(map_parser) == 1)
+		return (ft_free(map_parser), 1);
+	return (ft_free(map_parser), 0);
 }
 double deg_into_rad(char c)
 {
@@ -252,10 +259,13 @@ char player_id(char **map, int i , int j)
 {
 	return (map[i][j] == 'N' || map[i][j] == 'S' || map[i][j] == 'W' || map[i][j] == 'E');
 }
-char **resize(char **map, int max , t_map * mapq)
+char **fill_with_1(char **map , int max)
 {
-	char **map1 = malloc(sizeof(char *) * (max + 1));
-	int i = 0;
+	char **map1;
+	int i;
+
+	i = 0;
+	map1 = malloc(sizeof(char *) * (max + 1));
 	while (i < max)
 	{
 		map1[i] = malloc(sizeof(char) * (max + 1));
@@ -270,7 +280,13 @@ char **resize(char **map, int max , t_map * mapq)
 		i++;
 	}
 	map1[i] = NULL;
-	i = 0;
+}
+char **resize(char **map, int max , t_map * mapq)
+{
+	
+	char **map1;
+	map1 = fill_with_1(map1, max);
+	int i = 0;
 	while (map[i])
 	{
 		int j = 0;
@@ -287,14 +303,16 @@ char **resize(char **map, int max , t_map * mapq)
 	return (map1);
 }
 
-int **convert_map(char **map, int len)
+int  **convert_map(char **map, int len ,int **data)
 {
-	int **data = malloc(sizeof(int *) * ((len) + 1));
-	int i = 0;
+	int i;
+
+	data = malloc(sizeof(int *) * ((len) + 1));
+	i = 0;
 	while (map[i])
 	{
-		data[i] = malloc(sizeof(int) * (len));
 		int j = 0;
+		data[i] = malloc(sizeof(int) * (len));
 		while (j < len)
 		{
 			data[i][j] = map[i][j] - '0';
@@ -303,8 +321,8 @@ int **convert_map(char **map, int len)
 		i++;
 	}
 	data[i] = NULL;
+	ft_free(map);
 	return (data);
-	
 }
 int get_r(char **map)
 {
@@ -312,43 +330,44 @@ int get_r(char **map)
 		return (get_max_line(map));
 	else
 		return (get_len(map));
-		
 }
-int **fill_int(char **map, t_map *map1)
+void fill_int(char **map, t_map **map1, char **da)
 {
-	int y = 0;
+	int (y), (x);
+
+	y = 0;
 	while (map[y])
 	{
-		int x = 0;
+		x = 0;
 		while (map[y][x])
 		{
 			if(player_position(map[y][x]))
 			{
-				map1->x = (double)(x * 64);
-				map1->y  = (double)(y * 64);
-				map1->n  = deg_into_rad(map[y][x]);
+				(*map1)->x = (double)(x * 64);
+				(*map1)->y  = (double)(y * 64);
+				(*map1)->n  = deg_into_rad(map[y][x]);
 			}
 				x++;
 		}
 		y++;
 	}
-	map = resize(map, get_r(map) , map1);
-	map1->x_len = get_max_line(map);
-	map1->y_len = get_max_line(map);
-	int **data = convert_map(map , get_max_line(map));
-	return (data);
+	(*map1)->x_len = get_max_line(da);
+	(*map1)->y_len = get_max_line(da);
 }
 t_map *fill_map(t_map *map , char **cords)
 {
-	map = malloc(sizeof(t_map));
-	map->map = fill_int(cords, map);
-	
+	char **da;
+	da = resize(cords, get_r(cords), map);
+	fill_int(cords, &map, da);
+	map->map = convert_map(da , get_max_line(cords) , map->map);
 	return (map);
 }
 int getnlcount(char **str)
 {
-	int i = 0;
-	int count = 0;
+	int (i),(count);
+
+	count = 0;
+	i = 0;
 	while(str[i])
 	{
 		if(*str[i] == '\n' || !str[i][0])
@@ -361,8 +380,10 @@ int getnlcount(char **str)
 }
 int getnlcount1(char **str)
 {
-	int i = 0;
-	int count = 0;
+	int (i),(count);
+
+	count = 0;
+	i = 0;
 	while(str[i])
 	{
 		if(*str[i] != '\n' || str[i][0])
@@ -371,11 +392,13 @@ int getnlcount1(char **str)
 	}
 	return (count);
 }
-char **remove_newlines(char **map)
+char **remove_newlines(char **map, char **tmp)
 {
 	char **map1 = malloc(sizeof(char *) * (getnlcount1(map) + 1));
-	int i = 0;
-	int j = 0;
+	int (i),(j);
+
+	j = 0;
+	i = 0;
 	while (map[i])
 	{
 		if((*map[i] != '\n' || map[i][0]))
@@ -386,15 +409,19 @@ char **remove_newlines(char **map)
 		i++;	
 	}
 	map1[j] = NULL;
-	return map1;
+	ft_free(tmp);
+	return (map1);
 }
 char **update_map_pos(char **map)
 {
-	int i = 0;
-	i = 0;
-	int max = 0;
+	int i;
+	int max;
+	char **tmp;
+	
 	if(!map)
 		return (NULL);
+	i = 0;
+	max = 0;
 	while (map[i])
 	{
 		if(detailer_color(map[i]) || textures(map[i]))
@@ -402,20 +429,22 @@ char **update_map_pos(char **map)
 		if(map[i])
 			i++;
 	}
-	map += max + getnlcount(map + max);
-	map = remove_newlines(map);
-	return (map);
+	tmp = map + max + getnlcount(map + max);
+	return (remove_newlines(tmp, map));
 	
 }
 int	map_parser(char *file, t_parsing *parsing)
 {
 	char	**map;
+
 	map = ft_split_map(file);
 	if(!map)
 		return (1);
-	map = update_map_pos(map);
-	if (!map || invalid_sym(map) || check_map_validation(map) == 1)
-		return (printf("Error\n"), 1);
-	parsing->map = fill_map(parsing->map, map);
+	char **map1 = update_map_pos(map);
+	if (!map || invalid_sym(map1) || check_map_validation(map1) == 1)
+		return (printf("Error\n"),ft_free(map1), 1);
+	parsing->map = malloc(sizeof(t_map));
+	parsing->map = fill_map(parsing->map, map1);
+	ft_free(map1);
 	return (0);
 }
