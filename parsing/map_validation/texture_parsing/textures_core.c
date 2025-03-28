@@ -3,43 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   textures_core.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 15:50:28 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/28 21:27:30 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 21:40:37 by aait-bou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Wolf3D.h"
 
-void trim_leading_spaces(char *line, int *start) {
-    while (is_space(line[*start])) {
-        (*start)++;
-    }
-}
-int check_dup_tex(char **lines, int count) {
-    int i = 0;
-
-    while (i < count) {
-        int flag_i = 0;
-        trim_leading_spaces(lines[i], &flag_i);
-
-        int j = i + 1;
-        while (j < count) {
-            int flag_j = 0;
-            trim_leading_spaces(lines[j], &flag_j);
-
-            // Compare lines starting from the first non-space character
-            if (ft_strcmp(lines[i] + flag_i, lines[j] + flag_j) == 0) {
-                printf("Duplicate found: %s\n", lines[i] + flag_i);
-                return 0; // Duplicate found
+int	check_dup_tex(char **line)
+{
+    int		(i),(j);
+    char	*(dir1), *(dir2);
+    i = 0;
+    while (line[i])
+    {
+        if (textures(line[i]))
+        {
+            j = i + 1;
+            dir1 = textures(line[i]);
+            while (line[j])
+            {
+                if (textures(line[j]))
+                {
+                    dir2 = textures(line[j]);
+                    if (ft_strcmp(dir1, dir2) == 0)
+                        return (0);
+                }
+                j++;
             }
-
-            j++;
         }
         i++;
     }
-    return 1; // No duplicates found
+    return (1);
 }
 
 static int	check_textures(char **line)
@@ -47,9 +44,7 @@ static int	check_textures(char **line)
 	int	i;
 	int	counter;
 	int	files;
-	int	index;
 
-	index = 0;
 	i = 0;
 	counter = 0;
 	files = 0;
@@ -57,7 +52,6 @@ static int	check_textures(char **line)
 	{
 		if (textures(line[i]))
 		{
-			index = i;
 			if (check_file(ft_split(line[i]), &files) == -1 || i >= 6)
 				return (0);
 			counter++;
@@ -65,7 +59,7 @@ static int	check_textures(char **line)
 		i++;
 	}
 	if (counter == 4 && files == 4 && check_for_combo(line) == 0
-		&& check_dup_tex(line, index))
+		&& check_dup_tex(line))
 		return (1);
 	return (0);
 }
