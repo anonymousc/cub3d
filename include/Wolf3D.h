@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 15:56:33 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 18:20:45 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 01:24:03 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,7 +234,7 @@ char				**resize(char **map, int max);
 int					**convert_map(char **map, int len, int **data);
 void				fill_int(char **map, t_map **map1, char **data);
 int					getnlcount(char **str);
-char				*ft_resize(char *map, int size);
+char				*ft_resize(char **map, int size , int i);
 ////////////////////
 
 /// TEXTURES PARSER ///

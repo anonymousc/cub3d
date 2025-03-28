@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:28:16 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 15:49:29 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 00:33:52 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	syntax_check(char **map)
 
 	i = 0;
 	if (get_len(map) < 3 || edge_cases(map))
-		return (1);
+		return ( 1);
 	return (0);
 }
 
@@ -26,7 +26,7 @@ int	check_map_validation(char **map)
 {
 	char	**map_parser;
 
-	map_parser = replace_spaces_x(map, get_max_line(map));
+	map_parser = replace_spaces_x(map, get_r(map));
 	if (!map_parser || syntax_check(map_parser) == 1)
 		return (ft_free(map_parser), 1);
 	return (ft_free(map_parser), 0);

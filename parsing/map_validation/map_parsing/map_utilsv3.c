@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:21:06 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 15:48:47 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 01:02:39 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,26 +20,33 @@ int	base_cases(char **map, int j, int i)
 int	edge_cases(char **map)
 {
 	int (i), (j);
-	if (map[0] && map[1])
+	i = 0;
+	j = 0;
+	while (map[0][i])
+	{
+		if(check_edge(map, i, j, '0') 
+		|| check_edge(map, i, j, 'N')
+		|| check_edge(map, i, j, 'S')
+		|| check_edge(map, i, j, 'W')
+		|| check_edge(map, i, j, 'E')
+		)
+			return (1);
+		i++;
+	}
+	j = 2;
+	while (map[j])
 	{
 		i = 0;
-		j = 2;
-		while (map[j])
+		while (map[j][i])
 		{
-			i = 0;
-			while (map[j][i])
-			{
-				if (map[j + 1] && map[j - 1] && map[j] && base_cases(map, j, i))
-					return (1);
-				if (map[j][i])
-					i++;
-			}
-			if (map[j])
-				j++;
+			if (map[j + 1] && map[j - 1] && map[j] && base_cases(map, j, i))
+				return (1);
+			if (map[j][i])
+				i++;
 		}
+		if (map[j])
+			j++;
 	}
-	else
-		return (1);
 	return (0);
 }
 
@@ -50,7 +57,7 @@ int	player_position(char c)
 
 int	map_components(char c)
 {
-	return (c == '1' || c == '0' || player_position(c) || is_space(c));
+	return (c == '1' || (c == '0' || c == 'N') || c == 'W' || c == 'S' || c == 'E' || is_space(c) || c == 0);
 }
 
 int	invalid_sym(char **map)

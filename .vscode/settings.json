@@ -59,6 +59,8 @@
   "files.associations": {
     "wolf3d.h": "c",
     "stdatomic.h": "c",
-    "mlx.h": "c"
+    "mlx.h": "c",
+    "map": "c",
+    "format": "c"
   }
 }

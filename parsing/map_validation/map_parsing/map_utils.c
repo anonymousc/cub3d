@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:12:09 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 03:18:50 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 01:27:00 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,26 +28,31 @@ int	get_max_line(char **map)
 	return ((int)max);
 }
 
-char	*ft_resize(char *map, int size)
+char	*ft_resize(char **map, int size, int overflow)
 {
 	int		i;
 	char	*ret;
+	static int data;
 
-	i = 0;
 	ret = malloc(sizeof(char) * (size + 1));
+	i = 0;
 	while (i < size)
 	{
 		ret[i] = 'X';
 		i++;
 	}
+	ret[i] = 0;
 	i = 0;
-	while (map[i])
+	if(data <= overflow)
 	{
-		if (!is_space(map[i]))
-			ret[i] = map[i];
-		i++;
+		while (map[data] && map[data][i])
+		{
+			if (!is_space(map[data][i]))
+			ret[i] = map[data][i];
+			i++;
+		}
 	}
-	ret[size] = 0;
+	data++; 
 	return (ret);
 }
 
