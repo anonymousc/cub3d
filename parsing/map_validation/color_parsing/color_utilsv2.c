@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 02:44:31 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 15:43:09 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 21:18:55 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	check_if_valid_number(char **str)
 {
-	int (i), (counter);
+	int(i), (counter);
 	i = 0;
 	counter = 0;
 	while (str[i])
@@ -31,7 +31,7 @@ int	check_if_valid_number(char **str)
 
 int	nearby(char **line)
 {
-	int (j), (*index), (i);
+	int(j), (*index), (i);
 	j = 0;
 	i = 0;
 	index = malloc(sizeof(int) * 2);
@@ -47,10 +47,9 @@ int	nearby(char **line)
 	j = 0;
 	while (j < 1)
 	{
-		if (index[j + 1] == index[j] + 1)
-			j++;
-		else
+		if (index[j + 1] != index[j] + 1)
 			return (free(index), 1);
+		j++;
 	}
 	return (free(index), 0);
 }
@@ -86,7 +85,7 @@ int	double_check(char *str)
 
 int	final_check(char **color)
 {
-	int (i), (indexer);
+	int(i), (indexer);
 	i = 0;
 	indexer = 0;
 	while (color[i])
@@ -99,7 +98,7 @@ int	final_check(char **color)
 		}
 		i++;
 	}
-	if (nearby(color) || check_dup(color, indexer))
+	if (!nearby(color) && check_dup(color, indexer))
 		return (1);
 	return (0);
 }

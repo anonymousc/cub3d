@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 15:40:35 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 15:42:23 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 21:13:23 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	extra_check(char **color)
 {
-	int (i), (counter);
+	int(i), (counter);
 	i = 0;
 	counter = 0;
 	while (color[i])
@@ -27,7 +27,7 @@ int	extra_check(char **color)
 		}
 		i++;
 	}
-	if (counter == 2 && final_check(color) == 0)
+	if (counter == 2 && final_check(color))
 		return (0);
 	return (1);
 }
@@ -35,13 +35,22 @@ int	extra_check(char **color)
 int	*fill_rgb(char **str)
 {
 	int	i;
+	int	flag;
 	int	*rgb;
 
 	i = 0;
+	flag = 0;
 	rgb = malloc(sizeof(int) * (COLOR_SIZE));
 	while (str[i])
 	{
-		rgb[i] = ft_atoi(str[i]);
+		flag = 0;
+		if (i == 0)
+		{
+			while (is_space(str[0][flag]))
+				flag++;
+			flag++;
+		}
+		rgb[i] = ft_atoi(str[i] + flag);
 		i++;
 	}
 	ft_free(str);
@@ -50,18 +59,18 @@ int	*fill_rgb(char **str)
 
 t_color	*extra_norm(t_color *coloring, char **color)
 {
-	char	**data;
+	char	*data;
 
-	int (i), (j);
+	int(i), (j);
 	i = 0;
 	j = 0;
 	while (color[i])
 	{
 		if (detailer_color(color[i]))
 		{
-			data = ft_split(color[i]);
-			coloring[j].rgb = fill_rgb(ft_split_color(data[1]));
-			ft_free(data);
+			data = ft_strdup(color[i]);
+			coloring[j].rgb = fill_rgb(ft_split_color(data));
+			free(data);
 			j++;
 		}
 		i++;
@@ -71,7 +80,7 @@ t_color	*extra_norm(t_color *coloring, char **color)
 
 t_color	*after_parse(char **color, t_color *coloring)
 {
-	int (i), (j);
+	int(i), (j);
 	i = 0;
 	j = 0;
 	coloring = malloc(sizeof(t_color) * 2);

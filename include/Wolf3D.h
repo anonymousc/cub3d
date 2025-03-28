@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 15:56:33 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/28 01:24:03 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 19:20:11 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,6 +211,8 @@ int					fill_coloring(char **line, t_parsing *parsing);
 /////////////////////
 
 /// MAP PARSER /////
+int 				check_barrier(char **map);
+void				free_all(t_data *data);
 char				**ft_split_file(char *s);
 int					check_map_validation(char **map);
 char				**ft_split_map(char *s);

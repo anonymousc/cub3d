@@ -18,7 +18,7 @@ int	syntax_check(char **map)
 
 	i = 0;
 	if (get_len(map) < 3 || edge_cases(map))
-		return ( 1);
+		return (1);
 	return (0);
 }
 

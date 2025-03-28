@@ -6,32 +6,40 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 15:50:28 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 15:52:23 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 21:27:30 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Wolf3D.h"
 
-int	check_dup_tex(char **line, int index)
-{
-	int	i;
-	int	j;
+void trim_leading_spaces(char *line, int *start) {
+    while (is_space(line[*start])) {
+        (*start)++;
+    }
+}
+int check_dup_tex(char **lines, int count) {
+    int i = 0;
 
-	i = index - 3;
-	while (i < index)
-	{
-		while (is_space(*line[i]))
-			line++;
-		j = index - 3;
-		while (j <= i)
-		{
-			if (*line[j] == *line[j + 1])
-				return (1);
-			j++;
-		}
-		i++;
-	}
-	return (0);
+    while (i < count) {
+        int flag_i = 0;
+        trim_leading_spaces(lines[i], &flag_i);
+
+        int j = i + 1;
+        while (j < count) {
+            int flag_j = 0;
+            trim_leading_spaces(lines[j], &flag_j);
+
+            // Compare lines starting from the first non-space character
+            if (ft_strcmp(lines[i] + flag_i, lines[j] + flag_j) == 0) {
+                printf("Duplicate found: %s\n", lines[i] + flag_i);
+                return 0; // Duplicate found
+            }
+
+            j++;
+        }
+        i++;
+    }
+    return 1; // No duplicates found
 }
 
 static int	check_textures(char **line)
@@ -57,7 +65,7 @@ static int	check_textures(char **line)
 		i++;
 	}
 	if (counter == 4 && files == 4 && check_for_combo(line) == 0
-		&& !check_dup_tex(line, index))
+		&& check_dup_tex(line, index))
 		return (1);
 	return (0);
 }
@@ -66,7 +74,7 @@ t_tex	*reduce(char **file_content, t_tex *texture)
 {
 	char	**data;
 
-	int (i), (j);
+	int(i), (j);
 	i = 0;
 	j = 0;
 	while (file_content[i])
@@ -85,7 +93,7 @@ t_tex	*reduce(char **file_content, t_tex *texture)
 
 static void	after_check(t_parsing *parsing, char **file_content)
 {
-	int (i), (j);
+	int(i), (j);
 	parsing->textures = malloc(sizeof(t_tex) * TEXTURE_SIZE + 1);
 	i = 0;
 	j = 0;
@@ -93,8 +101,7 @@ static void	after_check(t_parsing *parsing, char **file_content)
 	{
 		if (textures(file_content[i]))
 		{
-			parsing->textures[j].direction = \
-				ft_strdup(textures(file_content[i]));
+			parsing->textures[j].direction = ft_strdup(textures(file_content[i]));
 			j++;
 		}
 		i++;

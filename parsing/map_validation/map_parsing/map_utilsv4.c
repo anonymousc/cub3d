@@ -70,7 +70,7 @@ int	get_r(char **map)
 
 void	fill_int(char **map, t_map **map1, char **data)
 {
-	int (y), (x);
+	int(y), (x);
 	y = 0;
 	while (map[y])
 	{
@@ -93,7 +93,7 @@ void	fill_int(char **map, t_map **map1, char **data)
 
 int	getnlcount(char **str)
 {
-	int (i), (count);
+	int(i), (count);
 	count = 0;
 	i = 0;
 	while (str[i])

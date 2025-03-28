@@ -6,11 +6,27 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:30:09 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 18:11:06 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 19:20:47 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Wolf3D.h"
+
+int	check_barrier(char **map)
+{
+	int (i), (j);
+	i = 0;
+	j = 0;
+	while (map[0][i])
+	{
+		if (check_edge(map, i, j, '0') || check_edge(map, i, j, 'N')
+			|| check_edge(map, i, j, 'S') || check_edge(map, i, j, 'W')
+			|| check_edge(map, i, j, 'E'))
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 void	extension_validation(char *str)
 {

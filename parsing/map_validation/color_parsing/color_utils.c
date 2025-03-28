@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 02:41:18 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 15:44:03 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 21:18:35 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,18 @@ int	get_len(char **s)
 	return (i);
 }
 
-int	check_dup(char **color, int indexer)
-{
-	return (*color[indexer] == *color[indexer + 1]);
+int check_dup(char **color, int indexer) {
+    int flag = 0;
+    int flag1 = 0;
+
+    while (is_space(color[indexer][flag])) {
+        flag++;
+    }
+
+    while (is_space(color[indexer + 1][flag1])) {
+        flag1++;
+    }
+    return (ft_strncmp(color[indexer] + flag, color[indexer + 1] + flag1, 1));
 }
 
 int	check_if_is_num(char *str)

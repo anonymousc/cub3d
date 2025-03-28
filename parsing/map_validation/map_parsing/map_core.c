@@ -14,7 +14,7 @@
 
 int	getnlcount1(char **str)
 {
-	int (i), (count);
+	int(i), (count);
 	count = 0;
 	i = 0;
 	while (str[i])
@@ -31,7 +31,7 @@ char	**remove_newlines(char **map, char **tmp)
 	char	**map1;
 
 	map1 = malloc(sizeof(char *) * (getnlcount1(map) + 1));
-	int (i), (j);
+	int(i), (j);
 	j = 0;
 	i = 0;
 	while (map[i])

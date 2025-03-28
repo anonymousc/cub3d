@@ -6,34 +6,56 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 17:29:12 by aait-bou          #+#    #+#             */
-/*   Updated: 2025/03/27 18:10:00 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 18:34:24 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Wolf3D.h"
 
+void	free_all_V2(t_data *data)
+{
+	free(data->player);
+	free_parser(data->parsing);
+	free(data->rays);
+	free(data->texture);
+	mlx_destroy_image(data->mlx, data->img);
+	mlx_destroy_window(data->mlx, data->win);
+	mlx_destroy_display(data->mlx);
+	free(data->mlx);
+	free(data);
+}
+void *my_mlx_xpm_file_to_image(void *mlx_ptr, char *filename ,t_data *data)
+{
+	void *img;
+
+	int (width), (height);
+	img = mlx_xpm_file_to_image(mlx_ptr, filename, &width, &height);
+	if (!img)
+		return (free_all_V2(data), exit(1),NULL);
+	return (img);
+}
+
 void	init_textures(t_data *data)
 {
-	int (width), (height);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
 			&data->line_length, &data->endian);
-	data->texture->north_img = mlx_xpm_file_to_image(data->mlx,
-			get_texture(data, "NO"), &width, &height);
+	data->texture->north_img = my_mlx_xpm_file_to_image(data->mlx,
+			get_texture(data, "NO"), data);
 	data->texture->north_addr = mlx_get_data_addr(data->texture->north_img,
 			&data->texture->bits_per_pixel, &data->texture->line_length,
 			&data->texture->endian);
-	data->texture->south_img = mlx_xpm_file_to_image(data->mlx,
-			get_texture(data, "SO"), &width, &height);
+	data->texture->south_img = my_mlx_xpm_file_to_image(data->mlx,
+			get_texture(data, "SO"), data);
 	data->texture->south_addr = mlx_get_data_addr(data->texture->south_img,
 			&data->texture->bits_per_pixel, &data->texture->line_length,
 			&data->texture->endian);
-	data->texture->east_img = mlx_xpm_file_to_image(data->mlx, get_texture(data,
-				"EA"), &width, &height);
+	data->texture->east_img = my_mlx_xpm_file_to_image(data->mlx, get_texture(data,
+				"EA"), data);
 	data->texture->east_addr = mlx_get_data_addr(data->texture->east_img,
 			&data->texture->bits_per_pixel, &data->texture->line_length,
 			&data->texture->endian);
-	data->texture->west_img = mlx_xpm_file_to_image(data->mlx, get_texture(data,
-				"WE"), &width, &height);
+	data->texture->west_img = my_mlx_xpm_file_to_image(data->mlx, get_texture(data,
+				"WE"), data);
 	data->texture->west_addr = mlx_get_data_addr(data->texture->west_img,
 			&data->texture->bits_per_pixel, &data->texture->line_length,
 			&data->texture->endian);

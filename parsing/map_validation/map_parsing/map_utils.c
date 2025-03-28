@@ -30,9 +30,9 @@ int	get_max_line(char **map)
 
 char	*ft_resize(char **map, int size, int overflow)
 {
-	int		i;
-	char	*ret;
-	static int data;
+	int			i;
+	char		*ret;
+	static int	data;
 
 	ret = malloc(sizeof(char) * (size + 1));
 	i = 0;
@@ -43,16 +43,16 @@ char	*ft_resize(char **map, int size, int overflow)
 	}
 	ret[i] = 0;
 	i = 0;
-	if(data <= overflow)
+	if (data <= overflow)
 	{
 		while (map[data] && map[data][i])
 		{
 			if (!is_space(map[data][i]))
-			ret[i] = map[data][i];
+				ret[i] = map[data][i];
 			i++;
 		}
 	}
-	data++; 
+	data++;
 	return (ret);
 }
 

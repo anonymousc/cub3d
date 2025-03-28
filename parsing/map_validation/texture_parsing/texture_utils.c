@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 02:47:47 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 15:50:03 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 21:02:00 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	check_file(char **line, int *files)
 
 int	check_for_combo(char **line)
 {
-	int (j), (*index), (i);
+	int(j), (*index), (i);
 	j = 0;
 	i = 0;
 	index = malloc(sizeof(int) * 4);
