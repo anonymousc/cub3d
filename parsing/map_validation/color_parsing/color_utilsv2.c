@@ -3,33 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   color_utilsv2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 02:44:31 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/28 23:52:07 by aait-bou         ###   ########.fr       */
+/*   Updated: 2025/03/29 02:51:12 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Wolf3D.h"
-
-void	*ft_memcpy(void *dest, const void *src, size_t n)
-{
-	size_t			i;
-	unsigned char	*str1;
-	unsigned char	*str2;
-
-	if (dest == src)
-		return (dest);
-	str1 = (unsigned char *) src;
-	str2 = (unsigned char *) dest;
-	i = 0;
-	while (i < n)
-	{
-		str2[i] = str1[i];
-		i++;
-	}
-	return (dest);
-}
 
 int	check_if_valid_number(char **str)
 {
@@ -47,6 +28,7 @@ int	check_if_valid_number(char **str)
 		return (1);
 	return (0);
 }
+
 int	double_check(char *str)
 {
 	char	**color_detailer;
@@ -64,7 +46,7 @@ int	double_check(char *str)
 
 int	nearby(char **line)
 {
-	int(j), (*index), (i);
+	int (j), (*index), (i);
 	j = 0;
 	i = 0;
 	index = malloc(sizeof(int) * 2);
@@ -101,10 +83,9 @@ int	getqomalen(char *str)
 	return (counter == 2);
 }
 
-
 int	final_check(char **color)
 {
-	int(i), (indexer);
+	int (i), (indexer);
 	i = 0;
 	indexer = 0;
 	while (color[i])
@@ -119,7 +100,7 @@ int	final_check(char **color)
 	}
 	if (nearby(color))
 		return (1);
-	if(!check_dup(color, indexer))
+	if (!check_dup(color, indexer))
 		return (1);
 	return (0);
 }

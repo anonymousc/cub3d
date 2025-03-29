@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub_init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:46:00 by aait-bou          #+#    #+#             */
-/*   Updated: 2025/03/27 19:11:16 by aait-bou         ###   ########.fr       */
+/*   Updated: 2025/03/29 03:01:56 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ t_data	*general_init(int ac, char **av)
 	t_rays		*rays;
 	t_texture	*textures;
 
-	(void)ac, (void)av;
 	parser = map_validation(file_validation(ac, av));
 	data = malloc(sizeof(t_data));
 	player = malloc(sizeof(t_player));

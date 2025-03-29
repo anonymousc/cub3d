@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   color_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 02:41:18 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/28 23:25:27 by aait-bou         ###   ########.fr       */
+/*   Updated: 2025/03/29 00:38:51 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ char	*detailer_color(char *color)
 {
 	while (is_space(*color))
 		color++;
-	if ((ft_strnstr(color, "F", 2)))
+	if (ft_strnstr(color, "F", 1))
 		return ("F");
-	if (ft_strnstr(color, "C ", 2))
+	if (ft_strnstr(color, "C", 1))
 		return ("C");
 	return (NULL);
 }
@@ -51,18 +51,22 @@ int	get_len(char **s)
 	return (i);
 }
 
-int check_dup(char **color, int indexer) {
-    int flag = 0;
-    int flag1 = 0;
+int	check_dup(char **color, int indexer)
+{
+	int	flag;
+	int	flag1;
 
-    while (is_space(color[indexer][flag])) {
-        flag++;
-    }
-
-    while (is_space(color[indexer + 1][flag1])) {
-        flag1++;
-    }
-    return (ft_strncmp(color[indexer] + flag, color[indexer + 1] + flag1, 1));
+	flag = 0;
+	flag1 = 0;
+	while (is_space(color[indexer][flag]))
+	{
+		flag++;
+	}
+	while (is_space(color[indexer + 1][flag1]))
+	{
+		flag1++;
+	}
+	return (ft_strncmp(color[indexer] + flag, color[indexer + 1] + flag1, 1));
 }
 
 int	check_if_is_num(char *str)
@@ -76,7 +80,7 @@ int	check_if_is_num(char *str)
 			i++;
 		if ((!(str[i] >= '0' && str[i] <= '9') && str[i]))
 			return (1);
-		if(str[i])
+		if (str[i])
 			i++;
 	}
 	return (0);

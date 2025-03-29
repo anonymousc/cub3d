@@ -3,14 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   map_validation_core.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 15:52:40 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/28 23:50:54 by aait-bou         ###   ########.fr       */
+/*   Updated: 2025/03/29 02:59:29 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Wolf3D.h"
+
+int	getnlcount_check(char **str)
+{
+	int (i), (count);
+	count = 0;
+	i = 0;
+	while (str[i])
+	{
+		if (ft_strlen(str[i]) != 0 || !check_space(str[i]))
+			count++;
+		i++;
+	}
+	return (count);
+}
+
+int	getnlcount1(char **str)
+{
+	int (i), (count);
+	count = 0;
+	i = 0;
+	while (str[i])
+	{
+		if (ft_strlen(str[i]) == 0 || check_space(str[i]))
+			count++;
+		else
+			break ;
+		i++;
+	}
+	return (i);
+}
 
 t_parsing	*map_validation(int fd)
 {

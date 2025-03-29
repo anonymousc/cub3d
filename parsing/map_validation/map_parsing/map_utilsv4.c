@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:23:24 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 15:49:14 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/29 03:17:34 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ int	**convert_map(char **map, int len, int **data)
 	int	i;
 	int	j;
 
-	data = malloc(sizeof(int *) * ((len) + 1));
+	data = malloc(sizeof(int *) * ((len) + get_len(map) + 1));
 	i = 0;
 	while (map[i])
 	{
 		j = 0;
-		data[i] = malloc(sizeof(int) * (len));
+		data[i] = malloc(sizeof(int) * get_len(map));
 		while (j < len)
 		{
 			data[i][j] = map[i][j] - '0';
@@ -70,7 +70,7 @@ int	get_r(char **map)
 
 void	fill_int(char **map, t_map **map1, char **data)
 {
-	int(y), (x);
+	int (y), (x);
 	y = 0;
 	while (map[y])
 	{
@@ -93,7 +93,7 @@ void	fill_int(char **map, t_map **map1, char **data)
 
 int	getnlcount(char **str)
 {
-	int(i), (count);
+	int (i), (count);
 	count = 0;
 	i = 0;
 	while (str[i])

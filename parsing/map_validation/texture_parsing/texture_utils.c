@@ -6,7 +6,7 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 02:47:47 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/28 21:02:00 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/29 02:55:19 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ char	*textures(char *line)
 {
 	while (line && is_space(*line))
 		line++;
-	if (ft_strnstr(line, "NO ", 3))
+	if (ft_strnstr(line, "NO", 2))
 		return ("NO");
-	if (ft_strnstr(line, "SO ", 3))
+	else if (ft_strnstr(line, "SO", 2))
 		return ("SO");
-	if (ft_strnstr(line, "WE ", 3))
+	else if (ft_strnstr(line, "WE", 2))
 		return ("WE");
-	if (ft_strnstr(line, "EA ", 4))
+	else if (ft_strnstr(line, "EA", 2))
 		return ("EA");
 	return (NULL);
 }
@@ -58,7 +58,7 @@ int	check_file(char **line, int *files)
 
 int	check_for_combo(char **line)
 {
-	int(j), (*index), (i);
+	int (j), (*index), (i);
 	j = 0;
 	i = 0;
 	index = malloc(sizeof(int) * 4);

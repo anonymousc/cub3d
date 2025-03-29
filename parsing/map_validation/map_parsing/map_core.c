@@ -6,41 +6,37 @@
 /*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:07:20 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 15:45:06 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/29 03:11:28 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Wolf3D.h"
 
-int	getnlcount1(char **str)
+int	check_space(char *str)
 {
-	int(i), (count);
-	count = 0;
-	i = 0;
-	while (str[i])
-	{
-		if (*str[i] != '\n' || str[i][0])
-			count++;
-		i++;
-	}
-	return (count);
+	size_t	flag;
+
+	flag = 0;
+	while (str[flag] == ' ' || str[flag] == '\t')
+		flag++;
+	if (flag == ft_strlen(str))
+		return (1);
+	return (0);
 }
 
 char	**remove_newlines(char **map, char **tmp)
 {
 	char	**map1;
 
-	map1 = malloc(sizeof(char *) * (getnlcount1(map) + 1));
-	int(i), (j);
+	int (i), (j);
+	(void)tmp;
+	map1 = malloc(sizeof(char *) * (get_len(map) + 1));
+	i = getnlcount1(map);
 	j = 0;
-	i = 0;
 	while (map[i])
 	{
-		if ((*map[i] != '\n' || map[i][0]))
-		{
-			map1[j] = ft_strdup(map[i]);
-			j++;
-		}
+		map1[j] = ft_strdup(map[i]);
+		j++;
 		i++;
 	}
 	map1[j] = NULL;

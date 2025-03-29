@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   Wolf3D.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 15:56:33 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/28 23:52:29 by aait-bou         ###   ########.fr       */
+/*   Updated: 2025/03/29 03:05:19 by aessadik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef WOLF3D_H
 # define WOLF3D_H
 
-# include <mlx.h>
 # include <fcntl.h>
 # include <limits.h>
 # include <math.h>
+# include <mlx.h>
 # include <pthread.h>
 # include <stdatomic.h>
 # include <stdbool.h>
@@ -151,6 +151,8 @@ typedef struct s_data
 	t_parsing		*parsing;
 }					t_data;
 
+int					getnlcount_check(char **str);
+int					getnlcount1(char **str);
 void				fill_color_buffers(t_data *data);
 int					keyrelease(int keycode, void *data);
 int					update(t_data *data);
@@ -182,6 +184,7 @@ void				init_rays(t_data *data, t_rays *first_ray,
 						double ray_angle);
 void				init_player(t_player *player, t_map *map);
 t_data				*general_init(int ac, char **av);
+int					check_space(char *str);
 
 //////RGBs//////
 unsigned int		get_pixel_color(t_texture *texture, void *addr, int x,
@@ -190,7 +193,7 @@ void				my_mlx_pixel_put(t_data *data, double x, double y,
 						int color);
 int					create_rgb(int red, int green, int blue);
 int					get_argb(char *c, t_data *data);
-void				free_all_V2(t_data *data, int flag);
+void				free_all_v2(t_data *data, int flag);
 
 //// PARSING /////
 int					file_validation(int arg, char **str);
@@ -209,10 +212,11 @@ int					double_check(char *str);
 int					final_check(char **color);
 void				free_coloring(t_parsing *parsing);
 int					fill_coloring(char **line, t_parsing *parsing);
+char				**remove_empty(char **str);
 /////////////////////
 
 /// MAP PARSER /////
-int 				check_barrier(char **map);
+int					check_barrier(char **map);
 void				free_all(t_data *data);
 char				**ft_split_file(char *s, char c);
 int					check_map_validation(char **map);
@@ -237,7 +241,7 @@ char				**resize(char **map, int max);
 int					**convert_map(char **map, int len, int **data);
 void				fill_int(char **map, t_map **map1, char **data);
 int					getnlcount(char **str);
-char				*ft_resize(char **map, int size , int i);
+char				*ft_resize(char **map, int size, int i);
 ////////////////////
 
 /// TEXTURES PARSER ///
@@ -248,6 +252,7 @@ t_parsing			*fill_texture(char **file_content, char *tmp);
 void				free_textures(t_parsing *parsing);
 int					get_len(char **s);
 char				*textures(char *line);
+int					check_spaces(char *str);
 /////////////////////
 
 /// APIS /////////

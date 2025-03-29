@@ -14,8 +14,8 @@
 
 size_t	word_count(char *s, char c)
 {
-	size_t		counter;
-	int			in_word;
+	size_t	counter;
+	int		in_word;
 	char	*p;
 
 	if (s == NULL)
@@ -37,8 +37,7 @@ size_t	word_count(char *s, char c)
 	return (counter);
 }
 
-
-char **fri_ol(char **str)
+char	**fri_ol(char **str)
 {
 	int	i;
 
@@ -51,9 +50,9 @@ char **fri_ol(char **str)
 
 static char	**str_all_fill(char **str, char *s, char c)
 {
- char	*start;
-	int			i;
-	int			len;
+	char	*start;
+	int		i;
+	int		len;
 
 	i = 0;
 	while (*s)
@@ -80,7 +79,7 @@ static char	**str_all_fill(char **str, char *s, char c)
 
 char	**ft_split_file(char *s, char c)
 {
-	char		**str;
+	char	**str;
 
 	if (!s)
 		return (0);
