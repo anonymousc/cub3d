@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Wolf3D.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 15:56:33 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/28 19:20:11 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 23:52:29 by aait-bou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef WOLF3D_H
 # define WOLF3D_H
 
-# include "../minilibx-linux/mlx.h"
+# include <mlx.h>
 # include <fcntl.h>
 # include <limits.h>
 # include <math.h>
@@ -175,6 +175,7 @@ void				hor_ver_distances(t_data *data, int i);
 void				render3dwalls(t_data *data, int i);
 bool				collision(double x, double y, t_map *map);
 double				distance(double x1, double y1, double x2, double y2);
+void				*ft_memcpy(void *dest, const void *src, size_t n);
 
 //////INIT////////
 void				init_rays(t_data *data, t_rays *first_ray,
@@ -189,12 +190,12 @@ void				my_mlx_pixel_put(t_data *data, double x, double y,
 						int color);
 int					create_rgb(int red, int green, int blue);
 int					get_argb(char *c, t_data *data);
+void				free_all_V2(t_data *data, int flag);
 
 //// PARSING /////
 int					file_validation(int arg, char **str);
 t_parsing			*map_validation(int fd);
 void				free_parser(t_parsing *parsing);
-char				**ft_split_file(char *s);
 
 /// COLOR PARSER ////
 char				**ft_split_color(char *s);
@@ -213,7 +214,7 @@ int					fill_coloring(char **line, t_parsing *parsing);
 /// MAP PARSER /////
 int 				check_barrier(char **map);
 void				free_all(t_data *data);
-char				**ft_split_file(char *s);
+char				**ft_split_file(char *s, char c);
 int					check_map_validation(char **map);
 char				**ft_split_map(char *s);
 int					get_r(char **map);

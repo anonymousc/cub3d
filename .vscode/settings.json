@@ -61,6 +61,7 @@
     "stdatomic.h": "c",
     "mlx.h": "c",
     "map": "c",
-    "format": "c"
+    "format": "c",
+    "sstream": "c"
   }
 }

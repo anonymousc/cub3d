@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   extra_funct.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 15:55:54 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 15:56:00 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 23:16:48 by aait-bou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ int	ft_atoi(char *str)
 	i = 0;
 	while ((str[i] >= 9 && str[i] <= 13) || str[i] == 32)
 		i++;
-	if (str[i] == '+')
-		i++;
+	if(!str[i])
+		return (INT_MAX);
 	while (str[i] && (str[i] >= '0' && str[i] <= '9'))
 	{
 		res = (res * 10) + str[i++] - '0';

@@ -3,18 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   color_utilsv2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 02:44:31 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/28 21:18:55 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 23:52:07 by aait-bou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Wolf3D.h"
 
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	size_t			i;
+	unsigned char	*str1;
+	unsigned char	*str2;
+
+	if (dest == src)
+		return (dest);
+	str1 = (unsigned char *) src;
+	str2 = (unsigned char *) dest;
+	i = 0;
+	while (i < n)
+	{
+		str2[i] = str1[i];
+		i++;
+	}
+	return (dest);
+}
+
 int	check_if_valid_number(char **str)
 {
-	int(i), (counter);
+	int (i), (counter);
 	i = 0;
 	counter = 0;
 	while (str[i])
@@ -27,6 +46,20 @@ int	check_if_valid_number(char **str)
 	if (counter != 3)
 		return (1);
 	return (0);
+}
+int	double_check(char *str)
+{
+	char	**color_detailer;
+
+	while (is_space(*str))
+		str++;
+	str += 1;
+	if (!getqomalen(str))
+		return (1);
+	color_detailer = ft_split_color(str);
+	if (!color_detailer || check_if_valid_number(color_detailer))
+		return (ft_free(color_detailer), 1);
+	return (ft_free(color_detailer), 0);
 }
 
 int	nearby(char **line)
@@ -68,20 +101,6 @@ int	getqomalen(char *str)
 	return (counter == 2);
 }
 
-int	double_check(char *str)
-{
-	char	**color_detailer;
-
-	while (is_space(*str))
-		str++;
-	str += 1;
-	if (!getqomalen(str))
-		return (1);
-	color_detailer = ft_split_color(str);
-	if (!color_detailer || check_if_valid_number(color_detailer))
-		return (ft_free(color_detailer), 1);
-	return (ft_free(color_detailer), 0);
-}
 
 int	final_check(char **color)
 {
@@ -98,7 +117,9 @@ int	final_check(char **color)
 		}
 		i++;
 	}
-	if (!nearby(color) && check_dup(color, indexer))
+	if (nearby(color))
+		return (1);
+	if(!check_dup(color, indexer))
 		return (1);
 	return (0);
 }

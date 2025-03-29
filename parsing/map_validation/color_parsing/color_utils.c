@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   color_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 02:41:18 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/28 21:18:35 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 23:25:27 by aait-bou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*detailer_color(char *color)
 {
 	while (is_space(*color))
 		color++;
-	if (ft_strnstr(color, "F ", 2))
+	if ((ft_strnstr(color, "F", 2)))
 		return ("F");
 	if (ft_strnstr(color, "C ", 2))
 		return ("C");
@@ -72,10 +72,12 @@ int	check_if_is_num(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if ((str[i] >= '0' && str[i] <= '9') || is_space(str[i]) || !str[i])
+		while (str[i] && is_space(str[i]))
 			i++;
-		else
+		if ((!(str[i] >= '0' && str[i] <= '9') && str[i]))
 			return (1);
+		if(str[i])
+			i++;
 	}
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_validation_core.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aessadik <aessadik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aait-bou <aait-bou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 15:52:40 by aessadik          #+#    #+#             */
-/*   Updated: 2025/03/27 15:53:19 by aessadik         ###   ########.fr       */
+/*   Updated: 2025/03/28 23:50:54 by aait-bou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_parsing	*map_validation(int fd)
 		free(line);
 		line = get_next_line(fd);
 	}
-	file = ft_split_file(tmp);
+	file = ft_split_file(tmp, '\n');
 	parsing = fill_texture(file, tmp);
 	if (fill_coloring(file, parsing) == 1)
 		return (free(tmp), ft_free(file), free_textures(parsing), free(parsing),
